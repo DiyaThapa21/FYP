@@ -1,0 +1,23 @@
+<div class="col-md-3">
+    <div class="card shadow-sm rounded-lg">
+        <div class="card-body text-center">
+            <img src="{{ asset('images/user.png') }}" alt="User Image" class="rounded-circle img-fluid border shadow-sm"
+                width="100">
+            <h5 class="mt-2">{{ auth()->user()->name }}</h5>
+            <p class="text-muted">{{ auth()->user()->email }}</p>
+            <hr>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="{{ route('dashboard') }}" class="text-dark"><i class="ti-dashboard"></i> Dashboard</a></li>
+                <li class="list-group-item"><a href="{{ route('user-profile') }}" class="text-dark"><i class="ti-user"></i> Profile</a></li>
+                <li class="list-group-item"><a href="#" class="text-dark"><i class="ti-shopping-cart"></i> My Orders</a></li>
+                <li class="list-group-item"><a href="#" class="text-dark"><i class="ti-heart"></i> My WishList</a></li>
+                <li class="list-group-item"><a href="{{ route('logout') }}" class="text-danger"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="ti-power-off"></i> Logout</a></li>
+            </ul>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        </div>
+    </div>
+</div>
