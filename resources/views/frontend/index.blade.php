@@ -118,7 +118,7 @@
                         <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item {{$product->cat_id}}">
                             <div class="single-product">
                                 <div class="product-img">
-                                    <a href="">
+                                    <a href="{{route('product-detail',$product->slug)}}">
                                         @php
                                         $photo=explode(',',$product->photo);
                                         @endphp
@@ -135,7 +135,18 @@
                                             <span class="price-dec">{{$product->discount}}% Off</span>
                                             @endif
                                     </a>
-
+                                    <div class="button-head">
+                                        <div class="product-action">
+                                            <a data-toggle="modal" data-target="#{{$product->id}}" title="Quick View"
+                                                href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
+                                            <a title="Wishlist" href="{{route('add-to-wishlist',$product->slug)}}"><i
+                                                    class=" ti-heart "></i><span>Add to Wishlist</span></a>
+                                        </div>
+                                        <div class="product-action-2">
+                                            <a title="Add to cart" href="{{route('add-to-cart',$product->slug)}}">Add to
+                                                cart</a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="product-content">
                                     <h3><a href="">{{$product->title}}</a>
@@ -486,130 +497,130 @@
 
 
 <style>
-/* Banner Sliding */
-#Gslider .carousel-inner {
-    background: #000000;
-    color: black;
-}
+    /* Banner Sliding */
+    #Gslider .carousel-inner {
+        background: #000000;
+        color: black;
+    }
 
-#Gslider .carousel-inner {
-    height: 550px;
-}
+    #Gslider .carousel-inner {
+        height: 550px;
+    }
 
-#Gslider .carousel-inner img {
-    width: 100% !important;
-    opacity: .8;
-}
+    #Gslider .carousel-inner img {
+        width: 100% !important;
+        opacity: .8;
+    }
 
-#Gslider .carousel-inner .carousel-caption {
-    bottom: 60%;
-}
+    #Gslider .carousel-inner .carousel-caption {
+        bottom: 60%;
+    }
 
-#Gslider .carousel-inner .carousel-caption h1 {
-    font-size: 50px;
-    font-weight: bold;
-    line-height: 100%;
-    color: #F7941D;
-}
+    #Gslider .carousel-inner .carousel-caption h1 {
+        font-size: 50px;
+        font-weight: bold;
+        line-height: 100%;
+        color: #F7941D;
+    }
 
-#Gslider .carousel-inner .carousel-caption p {
-    font-size: 18px;
-    color: black;
-    margin: 28px 0 28px 0;
-}
+    #Gslider .carousel-inner .carousel-caption p {
+        font-size: 18px;
+        color: black;
+        margin: 28px 0 28px 0;
+    }
 
-#Gslider .carousel-indicators {
-    bottom: 70px;
-}
+    #Gslider .carousel-indicators {
+        bottom: 70px;
+    }
 
-.product-gallery {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
+    .product-gallery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
 
-.single-slider {
-    text-align: center;
-    max-width: 100%;
-}
+    .single-slider {
+        text-align: center;
+        max-width: 100%;
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
-/*==================================================================
+    /*==================================================================
         [ Isotope ]*/
-var $topeContainer = $('.isotope-grid');
-var $filter = $('.filter-tope-group');
+    var $topeContainer = $('.isotope-grid');
+    var $filter = $('.filter-tope-group');
 
-// filter items on button click
-$filter.each(function() {
-    $filter.on('click', 'button', function() {
-        var filterValue = $(this).attr('data-filter');
-        $topeContainer.isotope({
-            filter: filterValue
+    // filter items on button click
+    $filter.each(function() {
+        $filter.on('click', 'button', function() {
+            var filterValue = $(this).attr('data-filter');
+            $topeContainer.isotope({
+                filter: filterValue
+            });
+        });
+
+    });
+
+    // init Isotope
+    $(window).on('load', function() {
+        var $grid = $topeContainer.each(function() {
+            $(this).isotope({
+                itemSelector: '.isotope-item',
+                layoutMode: 'fitRows',
+                percentPosition: true,
+                animationEngine: 'best-available',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                }
+            });
         });
     });
 
-});
+    var isotopeButton = $('.filter-tope-group button');
 
-// init Isotope
-$(window).on('load', function() {
-    var $grid = $topeContainer.each(function() {
-        $(this).isotope({
-            itemSelector: '.isotope-item',
-            layoutMode: 'fitRows',
-            percentPosition: true,
-            animationEngine: 'best-available',
-            masonry: {
-                columnWidth: '.isotope-item'
+    $(isotopeButton).each(function() {
+        $(this).on('click', function() {
+            for (var i = 0; i < isotopeButton.length; i++) {
+                $(isotopeButton[i]).removeClass('how-active1');
             }
+
+            $(this).addClass('how-active1');
         });
     });
-});
-
-var isotopeButton = $('.filter-tope-group button');
-
-$(isotopeButton).each(function() {
-    $(this).on('click', function() {
-        for (var i = 0; i < isotopeButton.length; i++) {
-            $(isotopeButton[i]).removeClass('how-active1');
-        }
-
-        $(this).addClass('how-active1');
-    });
-});
 </script>
 <script>
-function cancelFullScreen(el) {
-    var requestMethod = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen;
-    if (requestMethod) { // cancel full screen.
-        requestMethod.call(el);
-    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-        var wscript = new ActiveXObject("WScript.Shell");
-        if (wscript !== null) {
-            wscript.SendKeys("{F11}");
+    function cancelFullScreen(el) {
+        var requestMethod = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen;
+        if (requestMethod) { // cancel full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
         }
     }
-}
 
-function requestFullScreen(el) {
-    // Supports most browsers and their versions.
-    var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el
-        .msRequestFullscreen;
+    function requestFullScreen(el) {
+        // Supports most browsers and their versions.
+        var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el
+            .msRequestFullscreen;
 
-    if (requestMethod) { // Native full screen.
-        requestMethod.call(el);
-    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-        var wscript = new ActiveXObject("WScript.Shell");
-        if (wscript !== null) {
-            wscript.SendKeys("{F11}");
+        if (requestMethod) { // Native full screen.
+            requestMethod.call(el);
+        } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+            var wscript = new ActiveXObject("WScript.Shell");
+            if (wscript !== null) {
+                wscript.SendKeys("{F11}");
+            }
         }
+        return false
     }
-    return false
-}
 </script>
 
 @endpush

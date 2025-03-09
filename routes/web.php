@@ -44,8 +44,8 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('user/logout', 'logout')->name('user.logout');
     Route::get('user/register', 'register')->name('register.form');
     Route::post('user/register', 'registerSubmit')->name('register.submit');
-    Route::post('postpassword-reset', 'showResetForm')->name('password.reset');
-    Route::get('password-reset', 'showResetForm')->name('password.resetform');
+
+    Route::get('password-reset', 'showResetForm')->name('password.fromreset');
     Route::get('/', 'home')->name('home');
     Route::get('/home', 'index');
     Route::get('/about-us', 'aboutUs')->name('about-us');
@@ -64,26 +64,25 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/profile', [HomeController::class, 'profile'])->name('user-profile');
 
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
-    
+
     Route::put('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
- 
+
     Route::get('/order', "HomeController@orderIndex")->name('user.order.index');
     Route::get('/order/show/{id}', "HomeController@orderShow")->name('user.order.show');
     Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
-   
+
     Route::get('/user-review', [HomeController::class, 'productReviewIndex'])->name('user.productreview.index');
     Route::delete('/user-review/delete/{id}', [HomeController::class, 'productReviewDelete'])->name('user.productreview.delete');
     Route::get('/user-review/edit/{id}', [HomeController::class, 'productReviewEdit'])->name('user.productreview.edit');
     Route::patch('/user-review/update/{id}', [HomeController::class, 'productReviewUpdate'])->name('user.productreview.update');
 
-   
+
     Route::get('user-post/comment', [HomeController::class, 'userComment'])->name('user.post-comment.index');
     Route::delete('user-post/comment/delete/{id}', [HomeController::class, 'userCommentDelete'])->name('user.post-comment.delete');
     Route::get('user-post/comment/edit/{id}', [HomeController::class, 'userCommentEdit'])->name('user.post-comment.edit');
     Route::patch('user-post/comment/udpate/{id}', [HomeController::class, 'userCommentUpdate'])->name('user.post-comment.update');
     Route::get('change-password', [HomeController::class, 'changePassword'])->name('user.change.password.form');
     Route::post('change-password', [HomeController::class, 'changPasswordStore'])->name('change.password');
-
 });
 // Cart Routes
 Route::middleware('auth')->group(function () {
@@ -143,3 +142,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('change-password', [AdminController::class, 'changePassword'])->name('change.password.form');
     Route::post('change-password', [AdminController::class, 'changPasswordStore'])->name('change.updatepassword');
 });
+
+Route::get('product-detail/{slug}', [FrontendController::class, 'productDetail'])->name('product-detail');
+Route::get('/product-sub-cat/{slug}/{sub_slug}', [FrontendController::class, 'productSubCat'])->name('product-sub-cat');
+
+Route::get('/cart', function () {
+    return view('frontend.pages.cart');
+})->name('cart');
