@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/income', 'incomeChart')->name('product.order.income');
     });
 });
+Route::post('/adminlogin', [AdminController::class, 'adminloginSubmit'])->name('admin.login');
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
@@ -113,6 +114,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::post('/profile/{id}', [AdminController::class, 'profileUpdate'])->name('profile-update');
     Route::get('settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('setting/update', [AdminController::class, 'settingsUpdate'])->name('settings.update');
+
 
     Route::resources([
         'users' => UsersController::class,
@@ -149,3 +151,10 @@ Route::get('/product-sub-cat/{slug}/{sub_slug}', [FrontendController::class, 'pr
 Route::get('/cart', function () {
     return view('frontend.pages.cart');
 })->name('cart');
+
+Route::get('/blog', [FrontendController::class, 'blog'])->name('blog');
+Route::get('/blog-detail/{slug}', [FrontendController::class, 'blogDetail'])->name('blog.detail');
+Route::get('/blog/search', [FrontendController::class, 'blogSearch'])->name('blog.search');
+Route::post('/blog/filter', [FrontendController::class, 'blogFilter'])->name('blog.filter');
+Route::get('blog-cat/{slug}', [FrontendController::class, 'blogByCategory'])->name('blog.category');
+Route::get('blog-tag/{slug}', [FrontendController::class, 'blogByTag'])->name('blog.tag');
