@@ -158,3 +158,7 @@ Route::get('/blog/search', [FrontendController::class, 'blogSearch'])->name('blo
 Route::post('/blog/filter', [FrontendController::class, 'blogFilter'])->name('blog.filter');
 Route::get('blog-cat/{slug}', [FrontendController::class, 'blogByCategory'])->name('blog.category');
 Route::get('blog-tag/{slug}', [FrontendController::class, 'blogByTag'])->name('blog.tag');
+Route::post('/product/search', [FrontendController::class, 'productSearch'])->name('product.search');
+Route::match(['get', 'post'], '/filter', [FrontendController::class, 'productFilter'])->name('shop.filter');
+Route::get('/product-lists', [FrontendController::class, 'productLists'])->name('product-lists');
+Route::get('/product-grids', [FrontendController::class, 'productGrids'])->name('product-grids');

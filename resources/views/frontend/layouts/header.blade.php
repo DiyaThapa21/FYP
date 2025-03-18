@@ -67,10 +67,12 @@
                         <div class="search-bar">
                             <select>
                                 <option>All Category</option>
-
+                                @foreach(Helper::getAllCategory() as $cat)
+                                <option>{{$cat->title}}</option>
+                                @endforeach
                             </select>
-                            <form method="POST" action="">
-
+                            <form method="POST" action="{{route('product.search')}}">
+                                @csrf
                                 <input name="search" placeholder="Search Books Here....." type="search">
                                 <button class="btnn" type="submit"><i class="ti-search"></i></button>
                             </form>
@@ -185,7 +187,7 @@
                                             <li class="{{Request::path()=='about-us' ? 'active' : ''}}"><a href="{{route('about-us')}}">About Us</a></li>
 
 
-                                            <li class=""><a href="">Blog</a></li>
+                                            <li class="{{Request::path()=='blog' ? 'active' : ''}}"><a href="{{route('blog')}}">Blog</a></li>
 
                                             <li class="{{Request::path()=='contact' ? 'active' : ''}}"><a href="{{route('contact')}}">Contact Us</a></li>
                                         </ul>
