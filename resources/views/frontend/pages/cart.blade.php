@@ -46,30 +46,38 @@
                                 @endphp
                                 <td class="image" data-title="No"><img src="{{$photo[0]}}" alt="{{$photo[0]}}"></td>
                                 <td class="product-des" data-title="Description">
-                                    <p class="product-name"><a href="{{route('product-detail',$cart->product['slug'])}}" target="_blank">{{$cart->product['title']}}</a></p>
+                                    <p class="product-name"><a href="{{route('product-detail',$cart->product['slug'])}}"
+                                            target="_blank">{{$cart->product['title']}}</a></p>
                                     <p class="product-des">{!!($cart['summary']) !!}</p>
                                 </td>
-                                <td class="price" data-title="Price"><span>Rs {{number_format($cart['price'],2)}}</span></td>
-                                <td class="qty" data-title="Qty"><!-- Input Order -->
+                                <td class="price" data-title="Price"><span>Rs {{number_format($cart['price'],2)}}</span>
+                                </td>
+                                <td class="qty" data-title="Qty">
+                                    <!-- Input Order -->
                                     <div class="input-group">
                                         <div class="button minus">
-                                            <button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[{{$key}}]">
+                                            <button type="button" class="btn btn-primary btn-number" disabled="disabled"
+                                                data-type="minus" data-field="quant[{{$key}}]">
                                                 <i class="ti-minus"></i>
                                             </button>
                                         </div>
-                                        <input type="text" name="quant[{{$key}}]" class="input-number" data-min="1" data-max="100" value="{{$cart->quantity}}">
+                                        <input type="text" name="quant[{{$key}}]" class="input-number" data-min="1"
+                                            data-max="100" value="{{$cart->quantity}}">
                                         <input type="hidden" name="qty_id[]" value="{{$cart->id}}">
                                         <div class="button plus">
-                                            <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[{{$key}}]">
+                                            <button type="button" class="btn btn-primary btn-number" data-type="plus"
+                                                data-field="quant[{{$key}}]">
                                                 <i class="ti-plus"></i>
                                             </button>
                                         </div>
                                     </div>
                                     <!--/ End Input Order -->
                                 </td>
-                                <td class="total-amount cart_single_price" data-title="Total"><span class="money">Rs {{$cart['amount']}}</span></td>
+                                <td class="total-amount cart_single_price" data-title="Total"><span class="money">Rs
+                                        {{$cart['amount']}}</span></td>
 
-                                <td class="action" data-title="Remove"><a href="{{route('cart-delete',$cart->id)}}"><i class="ti-trash remove-icon"></i></a></td>
+                                <td class="action" data-title="Remove"><a href="{{route('cart-delete',$cart->id)}}"><i
+                                            class="ti-trash remove-icon"></i></a></td>
                             </tr>
                             @endforeach
                             <track>
@@ -85,7 +93,8 @@
                             @else
                             <tr>
                                 <td class="text-center">
-                                    There are no any carts available. <a href="{{route('product-grids')}}" style="color:blue;">Continue shopping</a>
+                                    There are no any carts available. <a href="{{route('product-grids')}}"
+                                        style="color:blue;">Continue shopping</a>
 
                                 </td>
                             </tr>
@@ -117,10 +126,12 @@
                         <div class="col-lg-4 col-md-7 col-12">
                             <div class="right">
                                 <ul>
-                                    <li class="order_subtotal" data-price="{{Helper::totalCartPrice()}}">Cart Subtotal<span>Rs {{number_format(Helper::totalCartPrice(),2)}}</span></li>
+                                    <li class="order_subtotal" data-price="{{Helper::totalCartPrice()}}">Cart
+                                        Subtotal<span>Rs {{number_format(Helper::totalCartPrice(),2)}}</span></li>
 
                                     @if(session()->has('coupon'))
-                                    <li class="coupon_price" data-price="{{Session::get('coupon')['value']}}">You Save<span>Rs {{number_format(Session::get('coupon')['value'],2)}}</span></li>
+                                    <li class="coupon_price" data-price="{{Session::get('coupon')['value']}}">You
+                                        Save<span>Rs {{number_format(Session::get('coupon')['value'],2)}}</span></li>
                                     @endif
                                     @php
                                     $total_amount=Helper::totalCartPrice();
@@ -130,14 +141,16 @@
                                     @endphp
                                     @if(session()->has('coupon'))
 
-                                    <li class="last" id="order_total_price">You Pay<span>Rs {{number_format($total_amount,2)}}</span></li>
+                                    <li class="last" id="order_total_price">You Pay<span>Rs
+                                            {{number_format($total_amount,2)}}</span></li>
                                     @else
-                                    <li class="last" id="order_total_price">You Pay<span>Rs {{number_format($total_amount,2)}}</span></li>
+                                    <li class="last" id="order_total_price">You Pay<span>Rs
+                                            {{number_format($total_amount,2)}}</span></li>
                                     @endif
                                 </ul>
                                 <div class="button5">
-                                    <a href="" class="btn">Checkout</a>
-                                    <a href="" class="btn">Continue shopping</a>
+                                    <a href="{{route('checkout')}}" class="btn">Checkout</a>
+                                    <a href="{{route('product-grids')}}" class="btn">Continue shopping</a>
                                 </div>
                             </div>
                         </div>

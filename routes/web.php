@@ -104,6 +104,12 @@ Route::middleware('auth')->group(function () {
         Route::get('order/pdf/{id}', 'pdf')->name('order.pdf');
         Route::get('/income', 'incomeChart')->name('product.order.income');
     });
+    Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
+
+    Route::post('/khalti/verifyPayment', [KhaltiController::class, 'success'])->name('verifyPayment');
+    Route::post('/khalti/storePayment', [KhaltiController::class, 'storePayment'])->name('khalti.storePayment');
+    Route::get('/payment/success', [KhaltiController::class, 'success'])->name('payment.success');
+    Route::get('/payment/cancel', [KhaltiController::class, 'cancel'])->name('payment.cancel');
 });
 Route::post('/adminlogin', [AdminController::class, 'adminloginSubmit'])->name('admin.login');
 

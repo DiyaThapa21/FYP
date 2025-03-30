@@ -62,9 +62,9 @@
                     <tr>
                         <td>{{$product->id}}</td>
                         <td>{{$product->title}}</td>
-                        <td>{{$product->cat_info['title']}}
+                        <td>{{@$product->cat_info['title']}}
                             <sub>
-                                {{$product->sub_cat_info->title ?? ''}}
+                                {{@$product->sub_cat_info->title ?? ''}}
                             </sub>
                         </td>
                         <td>{{(($product->is_featured==1)? 'Yes': 'No')}}</td>
@@ -132,18 +132,18 @@
 <link href="{{asset('backend/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <style>
-div.dataTables_wrapper div.dataTables_paginate {
-    display: none;
-}
+    div.dataTables_wrapper div.dataTables_paginate {
+        display: none;
+    }
 
-.zoom {
-    transition: transform .2s;
-    /* Animation */
-}
+    .zoom {
+        transition: transform .2s;
+        /* Animation */
+    }
 
-.zoom:hover {
-    transform: scale(5);
-}
+    .zoom:hover {
+        transform: scale(5);
+    }
 </style>
 @endpush
 
@@ -157,46 +157,46 @@ div.dataTables_wrapper div.dataTables_paginate {
 <!-- Page level custom scripts -->
 <script src="{{asset('backend/js/demo/datatables-demo.js')}}"></script>
 <script>
-$('#product-dataTable').DataTable({
-    "scrollX": false "columnDefs": [{
-        "orderable": false,
-        "targets": [10, 11, 12]
-    }]
-});
+    $('#product-dataTable').DataTable({
+        "scrollX": false "columnDefs": [{
+            "orderable": false,
+            "targets": [10, 11, 12]
+        }]
+    });
 
-// Sweet alert
+    // Sweet alert
 
-function deleteData(id) {
+    function deleteData(id) {
 
-}
+    }
 </script>
 <script>
-$(document).ready(function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $('.dltBtn').click(function(e) {
-        var form = $(this).closest('form');
-        var dataID = $(this).data('id');
-        // alert(dataID);
-        e.preventDefault();
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    form.submit();
-                } else {
-                    swal("Your data is safe!");
-                }
-            });
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('.dltBtn').click(function(e) {
+            var form = $(this).closest('form');
+            var dataID = $(this).data('id');
+            // alert(dataID);
+            e.preventDefault();
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this data!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        form.submit();
+                    } else {
+                        swal("Your data is safe!");
+                    }
+                });
+        })
     })
-})
 </script>
 @endpush

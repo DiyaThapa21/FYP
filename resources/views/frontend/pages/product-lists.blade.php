@@ -314,7 +314,7 @@
                             @endphp
                             <h3><small><del class="text-muted">Rs{{number_format($product->price,2)}}</del></small>
                                 Rs{{number_format($after_discount,2)}} </h3>
-                            <div class="quickview-peragraph">
+                            <div class="quickview-paragraph">
                                 <p>{!! html_entity_decode($product->summary) !!}</p>
                             </div>
                             @if($product->size)
