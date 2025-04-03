@@ -62,48 +62,52 @@ class KhaltiController extends Controller
         return redirect()->route('home')->with('error', 'Your payment is canceled.');
     }
 
-    public function success(Request $request)
+    public function verifyPayment(Request $request)
     {
-        $token = $request->input('token');
-        $amount = $request->input('amount');
-
+        
+        $token = $request->token;
+        $itemId = $request->itemId;
+    
+    
         $args = http_build_query([
             'token' => $token,
-            'amount' => $amount
+            'amount' => 1000
+    
         ]);
-
+     
+    
+       
         $url = "https://khalti.com/api/v2/payment/verify/";
-
+    
+       
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $headers = ['Authorization: test_secret_key_98eed0ae1a134e1e9a5562375294ee4b'];
+    
+      
+        $secret_key = config('app.khalti_secret_key');
+        $headers = ["Authorization: Key $secret_key"];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
+    
+      
         $response = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        $response = json_decode($response, true);
-
-        if ($status_code == 200 && isset($response['state']) && $response['state']['name'] == 'Completed') {
-            request()->session()->flash('success', 'You successfully paid with Khalti! Thank you.');
-            session()->forget('cart');
-            session()->forget('coupon');
-            return redirect()->route('home');
-        } else {
-            request()->session()->flash('error', 'Something went wrong, please try again.');
-            return redirect()->route('home');
-        }
+    
+       
+        return $response;
     }
-
-        public function storePayment(Request $request)
+    
+    public function storePayment(Request $request)
     {
-        // $response = $request->response;
-        // store the data to database here
+    
+        
+   
         return response()->noContent();
     }
+
+    
+
 }

@@ -67,8 +67,10 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
 
     Route::put('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
 
-    Route::get('/order', "HomeController@orderIndex")->name('user.order.index');
-    Route::get('/order/show/{id}', "HomeController@orderShow")->name('user.order.show');
+    Route::get('/user-order', [HomeController::class, 'orderIndex'])->name('user.order.index');
+
+
+    Route::get('/order/show/{id}', [HomeController::class, 'ordershow'])->name('user.order.show');
     Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
 
     Route::get('/user-review', [HomeController::class, 'productReviewIndex'])->name('user.productreview.index');
@@ -106,7 +108,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
 
-    Route::post('/khalti/verifyPayment', [KhaltiController::class, 'success'])->name('verifyPayment');
+    Route::post('/khalti/verifyPayment', [KhaltiController::class, 'verifyPayment'])->name('verifyPayment');
     Route::post('/khalti/storePayment', [KhaltiController::class, 'storePayment'])->name('khalti.storePayment');
     Route::get('/payment/success', [KhaltiController::class, 'success'])->name('payment.success');
     Route::get('/payment/cancel', [KhaltiController::class, 'cancel'])->name('payment.cancel');

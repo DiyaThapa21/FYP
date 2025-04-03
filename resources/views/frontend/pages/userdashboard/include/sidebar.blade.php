@@ -9,7 +9,7 @@
             <ul class="list-group">
                 <li class="list-group-item"><a href="{{ route('dashboard') }}" class="text-dark"><i class="ti-dashboard"></i> Dashboard</a></li>
                 <li class="list-group-item"><a href="{{ route('user-profile') }}" class="text-dark"><i class="ti-user"></i> Profile</a></li>
-                <li class="list-group-item"><a href="#" class="text-dark"><i class="ti-shopping-cart"></i> My Orders</a></li>
+                <li class="list-group-item"><a href="{{ route('user.order.index') }}" class="text-dark"><i class="ti-shopping-cart"></i> My Orders</a></li>
                 <li class="list-group-item"><a href="#" class="text-dark"><i class="ti-heart"></i> My WishList</a></li>
                 <li class="list-group-item"><a href="{{ route('logout') }}" class="text-danger"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
