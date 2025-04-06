@@ -7,6 +7,8 @@ use App\Models\Cart;
 use App\Models\Product;
 use DB;
 
+
+
 class KhaltiController extends Controller
 {
     public function payment()

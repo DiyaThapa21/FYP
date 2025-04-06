@@ -171,6 +171,36 @@
     </div>
   </li>
 
+  <div class="sidebar-heading">
+    Settings
+  </div>
+
+  <!-- Posts -->
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('roles.index') }}">
+
+      <span>Role</span>
+    </a>
+
+  </li>
+
+  <!-- Category -->
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('permissions.index') }}">
+
+      <span>Permision</span>
+    </a>
+
+  </li>
+
+  <!-- Tags -->
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('assignpermissions.index') }}">
+
+      <span>Assign Permision</span>
+    </a>
+
+  </li>
   <!-- Comments -->
   <!-- <li class="nav-item">
         <a class="nav-link" href="{{route('comment.index')}}">

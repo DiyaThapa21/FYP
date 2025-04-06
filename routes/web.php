@@ -24,6 +24,10 @@ use App\Http\Controllers\PostCategoryController;
 use App\Http\Controllers\PostTagController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RolePermissionController;
+
 
 // CACHE CLEAR ROUTE
 Route::get('cache-clear', function () {
@@ -141,6 +145,16 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         'comment' => PostCommentController::class,
         'message' => MessageController::class,
     ]);
+
+    Route::resource('assignpermissions', RolePermissionController::class);
+
+
+    Route::resource('roles', RoleController::class);
+
+
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::post('/permissions/add', [PermissionController::class, 'store'])->name('permissions.store');
 
     Route::get('/message/five', [MessageController::class, 'messageFive'])->name('messages.five');
     Route::post('post/{slug}/comment', [PostCommentController::class, 'store'])->name('post-comment.store');
