@@ -13,6 +13,8 @@ use Notification;
 use Helper;
 use Illuminate\Support\Str;
 use App\Notifications\StatusNotification;
+use App\Mail\OrderConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -95,6 +97,7 @@ class OrderController extends Controller
 
         Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
 
+        Mail::to($order->user->email)->send(new OrderConfirmation($order));
         if (request('payment_method') == 'khalti') {
             session()->forget('cart');
             session()->forget('coupon');
