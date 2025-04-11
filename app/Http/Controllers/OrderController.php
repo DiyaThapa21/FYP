@@ -94,10 +94,39 @@ class OrderController extends Controller
             ]);
         }
 
-
         Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $order->id]);
 
-        Mail::to($order->user->email)->send(new OrderConfirmation($order));
+        $rewardPoints = floor($order_data['total_amount'] / 100) * 10;
+        $expenseAmount = $order_data['total_amount'];
+
+        $existingReward = \App\Models\UserRewards::where('user_id', $order->user_id)->first();
+
+        if ($existingReward) {
+            $existingReward->reward_point += $rewardPoints;
+            $existingReward->total_expenses += $expenseAmount;
+
+
+            if ($existingReward->total_expenses >= 8000) {
+                $existingReward->type = 2;
+            } elseif ($existingReward->total_expenses >= 5000) {
+                $existingReward->type = 1;
+            } else {
+                $existingReward->type = 0;
+            }
+
+            $existingReward->save();
+        } else {
+            \App\Models\UserRewards::create([
+                'user_id' => $order->user_id,
+                'reward_point' => $rewardPoints,
+                'total_expenses' => $expenseAmount,
+                'type' => $expenseAmount >= 8000 ? 2 : ($expenseAmount >= 5000 ? 1 : 0),
+            ]);
+        }
+
+
+        Mail::to($request->email)->send(new OrderConfirmation($order));
+
         if (request('payment_method') == 'khalti') {
             session()->forget('cart');
             session()->forget('coupon');
@@ -111,6 +140,7 @@ class OrderController extends Controller
         request()->session()->flash('success', 'Your order has been placed successfully!');
         return redirect()->route('order.success', ['id' => $order->id]);
     }
+
 
     /**
      * Display the specified resource.

@@ -37,11 +37,14 @@ class HomeController extends Controller
 
     public function profile()
     {
-
         $profile = Auth()->user();
 
-        return view('frontend.pages.userdashboard.profile')->with('profile', $profile);
+
+        $reward = \App\Models\UserRewards::where('user_id', $profile->id)->value('reward_point') ?? 0;
+
+        return view('frontend.pages.userdashboard.profile', compact('profile', 'reward'));
     }
+
 
 
     public function dashboard()
