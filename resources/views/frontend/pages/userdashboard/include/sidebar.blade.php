@@ -9,7 +9,7 @@
 
             @php
             $tiers = ['Primary', 'Silver', 'Gold'];
-            $tierColors = ['info', 'primary', 'success'];
+
             @endphp
 
             <p class="mb-1">
@@ -17,12 +17,6 @@
                 <span class="fw-semibold">{{ $reward }}</span>
             </p>
 
-            <p class="mb-0">
-                <span class="text-success fw-bold">Type:</span>
-                <span class="badge bg-{{ $tierColors[$type ?? 0] }} px-3 py-1 rounded-pill">
-                    {{ $tiers[$type ?? 0] }}
-                </span>
-            </p>
 
             <hr>
             <ul class="list-group">
@@ -30,6 +24,8 @@
                             class="ti-dashboard"></i> Dashboard</a></li>
                 <li class="list-group-item"><a href="{{ route('user-profile') }}" class="text-dark"><i
                             class="ti-user"></i> Profile</a></li>
+                <li class="list-group-item"><a href="{{ route('user-membership') }}" class="text-dark"><i
+                            class="ti-user"></i> Membership</a></li>
                 <li class="list-group-item"><a href="{{ route('user.order.index') }}" class="text-dark"><i
                             class="ti-shopping-cart"></i> My Orders</a></li>
                 <li class="list-group-item"><a href="#" class="text-dark"><i class="ti-heart"></i> My WishList</a></li>

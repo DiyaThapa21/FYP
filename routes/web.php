@@ -72,7 +72,7 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::put('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
 
     Route::get('/user-order', [HomeController::class, 'orderIndex'])->name('user.order.index');
-
+    Route::get('/membership', [HomeController::class, 'membership'])->name('user-membership');
 
     Route::get('/order/show/{id}', [HomeController::class, 'ordershow'])->name('user.order.show');
     Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');

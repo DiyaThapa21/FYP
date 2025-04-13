@@ -45,6 +45,17 @@ class HomeController extends Controller
         return view('frontend.pages.userdashboard.profile', compact('profile', 'reward'));
     }
 
+    public function  membership()
+    {
+        $profile = Auth()->user();
+
+
+        $reward = \App\Models\UserRewards::where('user_id', $profile->id)->value('reward_point') ?? 0;
+
+        return view('frontend.pages.userdashboard.membership ', compact('profile', 'reward'));
+    }
+
+
 
 
     public function dashboard()
