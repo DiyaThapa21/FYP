@@ -113,7 +113,8 @@
           <div class="col-lg-4 col-lx-4">
             <div class="shipping-info">
               <p class="text-center pb-4">ORDER ITEMS</p>
-              <div class="table-responsive" style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+              <div class="table-responsive"
+                style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
                 <table class="table">
                   <thead style="position: sticky; top: 0; background: white; z-index: 10;">
                     <tr>
@@ -136,7 +137,9 @@
                       <th scope="row">{{ $key + 1 }}</th> {{-- Auto-incrementing item number --}}
                       <td>
                         <div>
-                          <p class="text-truncate font-size-14 mb-1">{{ $item->product->title }}</p>
+                          <p class="text-truncate font-size-14 mb-1">
+                            {{ $item->product->title }}
+                          </p>
                         </div>
                       </td>
                       <td>

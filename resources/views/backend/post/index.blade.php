@@ -10,7 +10,9 @@
   </div>
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary float-left">Post Lists</h6>
-    <a href="{{route('post.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Post</a>
+    @can('manage-blogs')<a href="{{route('post.create')}}" class="btn btn-primary btn-sm float-right"
+      data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add
+      Post</a>@endcan
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -28,18 +30,7 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tfoot>
-          <tr>
-            <th>S.N.</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Tag</th>
-            <th>Author</th>
-            <th>Photo</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </tfoot>
+
         <tbody>
 
           @foreach($posts as $post)
@@ -62,9 +53,11 @@
             </td>
             <td>
               @if($post->photo)
-              <img src="{{ asset($post->photo) }}" class="img-fluid zoom" style="max-width:80px" alt="{{$post->photo}}">
+              <img src="{{ asset($post->photo) }}" class="img-fluid zoom" style="max-width:80px"
+                alt="{{$post->photo}}">
               @else
-              <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid" style="max-width:80px" alt="avatar.png">
+              <img src="{{asset('backend/img/thumbnail-default.jpg')}}" class="img-fluid"
+                style="max-width:80px" alt="avatar.png">
               @endif
             </td>
             <td>
@@ -75,12 +68,17 @@
               @endif
             </td>
             <td>
-              <a href="{{route('post.edit',$post->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom"><i class="fas fa-edit"></i></a>
-              <form method="POST" action="{{route('post.destroy',[$post->id])}}">
+              @can('edit-blogs')<a href="{{route('post.edit',$post->id)}}"
+                class="btn btn-primary btn-sm float-left mr-1"
+                style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit"
+                data-placement="bottom"><i class="fas fa-edit"></i></a>@endcan
+              @can('delete-blogs')<form method="POST" action="{{route('post.destroy',[$post->id])}}">
                 @csrf
                 @method('delete')
-                <button class="btn btn-danger btn-sm dltBtn" data-id={{$post->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
-              </form>
+                <button class="btn btn-danger btn-sm dltBtn" data-id={{$post->id}}
+                  style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip"
+                  data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
+              </form>@endcan
             </td>
           </tr>
           @endforeach

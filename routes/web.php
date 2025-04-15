@@ -27,6 +27,8 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\AdminUserController;
+
 
 
 // CACHE CLEAR ROUTE
@@ -67,12 +69,13 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
 
     Route::get('/profile', [HomeController::class, 'profile'])->name('user-profile');
 
+    Route::get('/membership', [HomeController::class, 'membership'])->name('user-membership');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::put('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
 
     Route::get('/user-order', [HomeController::class, 'orderIndex'])->name('user.order.index');
-    Route::get('/membership', [HomeController::class, 'membership'])->name('user-membership');
+
 
     Route::get('/order/show/{id}', [HomeController::class, 'ordershow'])->name('user.order.show');
     Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
@@ -151,6 +154,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('roles', RoleController::class);
 
+    Route::resource('admins', AdminUserController::class);
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');

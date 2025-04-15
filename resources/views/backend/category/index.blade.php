@@ -10,8 +10,8 @@
     </div>
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary float-left">Category Lists</h6>
-        <a href="{{route('category.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip"
-            data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Category</a>
+        @can('create-category')<a href="{{route('category.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip"
+            data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Category</a>@endcan
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -29,18 +29,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>S.N.</th>
-                        <th>Title</th>
-                        <th>Slug</th>
-                        <th>Is Parent</th>
-                        <th>Parent Category</th>
-                        <th>Photo</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
+
                 <tbody>
 
                     @foreach($categories as $category)
@@ -72,10 +61,14 @@
                             @endif
                         </td>
                         <td>
+                            @can('edit-category')
                             <a href="{{route('category.edit',$category->id)}}"
                                 class="btn btn-primary btn-sm float-left mr-1"
                                 style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit"
                                 data-placement="bottom"><i class="fas fa-edit"></i></a>
+                            @endcan
+
+                            @can('delete-category')
                             <form method="POST" action="{{route('category.destroy',[$category->id])}}">
                                 @csrf
                                 @method('delete')
@@ -83,6 +76,7 @@
                                     style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip"
                                     data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -101,9 +95,9 @@
 <link href="{{asset('backend/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <style>
-div.dataTables_wrapper div.dataTables_paginate {
-    display: none;
-}
+    div.dataTables_wrapper div.dataTables_paginate {
+        display: none;
+    }
 </style>
 @endpush
 
@@ -117,46 +111,46 @@ div.dataTables_wrapper div.dataTables_paginate {
 <!-- Page level custom scripts -->
 <script src="{{asset('backend/js/demo/datatables-demo.js')}}"></script>
 <script>
-$('#banner-dataTable').DataTable({
-    "columnDefs": [{
-        "orderable": false,
-        "targets": [3, 4, 5]
-    }]
-});
+    $('#banner-dataTable').DataTable({
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [3, 4, 5]
+        }]
+    });
 
-// Sweet alert
+    // Sweet alert
 
-function deleteData(id) {
+    function deleteData(id) {
 
-}
+    }
 </script>
 <script>
-$(document).ready(function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $('.dltBtn').click(function(e) {
-        var form = $(this).closest('form');
-        var dataID = $(this).data('id');
-        // alert(dataID);
-        e.preventDefault();
-        swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    form.submit();
-                } else {
-                    swal("Your data is safe!");
-                }
-            });
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $('.dltBtn').click(function(e) {
+            var form = $(this).closest('form');
+            var dataID = $(this).data('id');
+            // alert(dataID);
+            e.preventDefault();
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this data!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        form.submit();
+                    } else {
+                        swal("Your data is safe!");
+                    }
+                });
+        })
     })
-})
 </script>
 @endpush

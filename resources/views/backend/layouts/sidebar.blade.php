@@ -24,15 +24,21 @@
 
 
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+      aria-controls="collapseTwo">
       <i class="fas fa-image"></i>
       <span>Slider</span>
     </a>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Slider Options:</h6>
+        @can('manage-slides')
         <a class="collapse-item" href="{{route('banner.index')}}">Slider</a>
+        @endcan
+
+        @can('create-slide')
         <a class="collapse-item" href="{{route('banner.create')}}">Add Slider</a>
+        @endcan
       </div>
     </div>
   </li>
@@ -45,29 +51,42 @@
 
   <!-- Categories -->
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#categoryCollapse"
+      aria-expanded="true" aria-controls="categoryCollapse">
       <i class="fas fa-sitemap"></i>
       <span>Category</span>
     </a>
     <div id="categoryCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Category Options:</h6>
+        @can('manage-categories')
         <a class="collapse-item" href="{{route('category.index')}}">Category</a>
+        @endcan
+
+        @can('create-category')
         <a class="collapse-item" href="{{route('category.create')}}">Add Category</a>
+        @endcan
       </div>
     </div>
   </li>
 
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#productCollapse" aria-expanded="true" aria-controls="productCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#productCollapse"
+      aria-expanded="true" aria-controls="productCollapse">
       <i class="fas fa-cubes"></i>
       <span>Products</span>
     </a>
     <div id="productCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Product Options:</h6>
+        @can('manage-items')
         <a class="collapse-item" href="{{route('product.index')}}">Products</a>
+        @endcan
+
+        @can('create-item')
         <a class="collapse-item" href="{{route('product.create')}}">Add Products</a>
+
+        @endcan
       </div>
     </div>
   </li>
@@ -89,34 +108,43 @@
 
 
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#shippingCollapse" aria-expanded="true" aria-controls="shippingCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#shippingCollapse"
+      aria-expanded="true" aria-controls="shippingCollapse">
       <i class="fas fa-truck"></i>
       <span>Shipping</span>
     </a>
     <div id="shippingCollapse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Shipping Options:</h6>
+        @can('manage-shipping')
         <a class="collapse-item" href="{{route('shipping.index')}}">Shipping</a>
+        @endcan
+
+        @can('create-shipping')
         <a class="collapse-item" href="{{route('shipping.create')}}">Add Shipping</a>
+        @endcan
       </div>
     </div>
   </li>
 
   <!--Orders -->
+  @can('manage-bookings')
   <li class="nav-item">
     <a class="nav-link" href="{{route('order.index')}}">
       <i class="fas fa-hammer fa-chart-area"></i>
       <span>Orders</span>
     </a>
   </li>
+  @endcan
 
   <!-- Reviews -->
+  @can('manage-reviews')
   <li class="nav-item">
     <a class="nav-link" href="{{route('review.index')}}">
       <i class="fas fa-comments"></i>
       <span>Reviews</span></a>
   </li>
-
+  @endcan
 
   <!-- Divider -->
   <hr class="sidebar-divider">
@@ -128,54 +156,72 @@
 
   <!-- Posts -->
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#postCollapse" aria-expanded="true" aria-controls="postCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#postCollapse" aria-expanded="true"
+      aria-controls="postCollapse">
       <i class="fas fa-fw fa-folder"></i>
       <span>Blogs</span>
     </a>
     <div id="postCollapse" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Blog Options:</h6>
+        @can('manage-blogs')
         <a class="collapse-item" href="{{route('post.index')}}">Blog</a>
+        @endcan
+        @can('create-blogs')
         <a class="collapse-item" href="{{route('post.create')}}">Add Blog</a>
+        @endcan
       </div>
     </div>
   </li>
 
   <!-- Category -->
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#postCategoryCollapse" aria-expanded="true" aria-controls="postCategoryCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#postCategoryCollapse"
+      aria-expanded="true" aria-controls="postCategoryCollapse">
       <i class="fas fa-sitemap fa-folder"></i>
       <span>Category</span>
     </a>
     <div id="postCategoryCollapse" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Category Options:</h6>
+        @can('manage-blog-category')
         <a class="collapse-item" href="{{route('post-category.index')}}">Category</a>
+        @endcan
+        @can('create-blog-category')
         <a class="collapse-item" href="{{route('post-category.create')}}">Add Category</a>
+        @endcan
       </div>
     </div>
   </li>
 
   <!-- Tags -->
   <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#tagCollapse" aria-expanded="true" aria-controls="tagCollapse">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#tagCollapse" aria-expanded="true"
+      aria-controls="tagCollapse">
       <i class="fas fa-tags fa-folder"></i>
       <span>Tags</span>
     </a>
     <div id="tagCollapse" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Tag Options:</h6>
+        @can('manage-blog-tag')
         <a class="collapse-item" href="{{route('post-tag.index')}}">Tag</a>
+        @endcan
+
+        @can('create-blog-tag')
         <a class="collapse-item" href="{{route('post-tag.create')}}">Add Tag</a>
+        @endcan
       </div>
     </div>
   </li>
+
 
   <div class="sidebar-heading">
     Settings
   </div>
 
   <!-- Posts -->
+  @can('manage-roles')
   <li class="nav-item">
     <a class="nav-link " href="{{ route('roles.index') }}">
 
@@ -183,7 +229,10 @@
     </a>
 
   </li>
+  @endcan
 
+
+  @can('manage-permissions')
   <!-- Category -->
   <li class="nav-item">
     <a class="nav-link " href="{{ route('permissions.index') }}">
@@ -192,8 +241,10 @@
     </a>
 
   </li>
+  @endcan
 
   <!-- Tags -->
+  @can('manage-assignpermission')
   <li class="nav-item">
     <a class="nav-link " href="{{ route('assignpermissions.index') }}">
 
@@ -201,6 +252,18 @@
     </a>
 
   </li>
+  @endcan
+
+  @can('manage-admins')
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('admins.index') }}">
+
+      <span>Admin Users</span>
+    </a>
+
+  </li>
+  @endcan
+
   <!-- Comments -->
   <!-- <li class="nav-item">
         <a class="nav-link" href="{{route('comment.index')}}">
