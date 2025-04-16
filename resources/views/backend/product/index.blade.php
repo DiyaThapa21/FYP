@@ -2,6 +2,58 @@
 
 @section('main-content')
 <!-- DataTales Example -->
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        background-color: #ccc;
+        transition: 0.4s;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+    input:checked+.slider {
+        background-color: #28a745;
+        /* Green for active */
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #28a745;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(24px);
+    }
+</style>
+
 <div class="card shadow mb-4">
     <div class="row">
         <div class="col-md-12">
@@ -10,7 +62,7 @@
     </div>
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary float-left">Product Lists</h6>
-        @can('create-product')<a href="{{route('product.create')}}" class="btn btn-primary btn-sm float-right"
+        @can('create-item')<a href="{{route('product.create')}}" class="btn btn-primary btn-sm float-right"
             data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add
             Product</a>
         @endcan
@@ -30,9 +82,18 @@
                         <th>IBAN </th>
                         <th>Condition</th>
                         <!-- <th>Brand</th> -->
+
+                        @can('added-by-product')
+
+                        <th>Added By</th>
+
+                        @endcan
                         <th>Stock</th>
                         <th>Photo</th>
                         <th>Status</th>
+                        @can('approve-product')
+                        <th>Approve / Disapprove</th>
+                        @endcan
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -58,6 +119,11 @@
                         <td> {{$product->discount}}% OFF</td>
                         <td>{{$product->size}}</td>
                         <td>{{$product->condition}}</td>
+                        @can('added-by-product')
+
+                        <td>{{@$product->addedBy->name}}</td>
+                        @endcan
+
                         <!-- <td>{{ ucfirst(optional($product->brand)->title) }}</td> -->
                         <td>
                             @if($product->stock>0)
@@ -88,14 +154,31 @@
                             <span class="badge badge-warning">{{$product->status}}</span>
                             @endif
                         </td>
+                        @can('approve-product')
                         <td>
-                            @can('edit-product')<a href="{{route('product.edit',$product->id)}}"
+                            <form action="{{ route('product.status.update') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <input type="hidden" name="status"
+                                    value="{{ $product->status == 'active' ? 'inactive' : 'active' }}">
+                                <label class="switch">
+                                    <input type="checkbox" onchange="this.form.submit()"
+                                        {{ $product->status == 'active' ? 'checked' : '' }}>
+                                    <span class="slider round"></span>
+                                </label>
+                            </form>
+                        </td>
+                        @endcan
+
+
+                        <td>
+                            @can('edit-item')<a href="{{route('product.edit',$product->id)}}"
                                 class="btn btn-primary btn-sm float-left mr-1"
                                 style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit"
                                 data-placement="bottom"><i class="fas fa-edit"></i></a>
                             @endcan
 
-                            @can('delete-product')
+                            @can('delete-item')
 
                             <form method="POST" action="{{route('product.destroy',[$product->id])}}">
                                 @csrf
@@ -189,4 +272,33 @@
         })
     })
 </script>
+<script>
+    $(document).ready(function() {
+        $('.custom-toggle').change(function() {
+            var status = $(this).is(':checked') ? 'active' : 'inactive';
+            var product_id = $(this).data('id');
+
+            $.ajax({
+                url: '{{ route("product.status.update") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: status,
+                    id: product_id
+                },
+                success: function(response) {
+                    if (response.success) {
+                        console.log(response.message);
+                    } else {
+                        alert('Something went wrong!');
+                    }
+                },
+                error: function() {
+                    alert('Failed to update product status.');
+                }
+            });
+        });
+    });
+</script>
+
 @endpush

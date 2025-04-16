@@ -18,9 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products=Product::getAllProduct();
+        $products = Product::with('addedBy')->paginate();
         // return $products;
-        return view('backend.product.index')->with('products',$products);
+        return view('backend.product.index')->with('products', $products);
     }
 
     /**
@@ -30,10 +30,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $brand=Brand::get();
-        $category=Category::where('is_parent',1)->get();
+        $brand = Brand::get();
+        $category = Category::where('is_parent', 1)->get();
         // return $category;
-        return view('backend.product.create')->with('categories',$category)->with('brands',$brand);
+        return view('backend.product.create')->with('categories', $category)->with('brands', $brand);
     }
 
     /**
@@ -42,7 +42,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-  
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -61,7 +61,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'discount' => 'nullable|numeric'
         ]);
-    
+
         $data = $request->all();
         $slug = Str::slug($request->title);
         $count = Product::where('slug', $slug)->count();
@@ -70,34 +70,38 @@ class ProductController extends Controller
         }
         $data['slug'] = $slug;
         $data['is_featured'] = $request->input('is_featured', 0);
-    
-       
+
+
+        $user = auth()->user();
+        if ($user && $user->role_id == 5) {
+            $data['status'] = 'inactive';
+            $data['added_by'] = $user->id;
+        }
+
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             $photo = $request->file('photo');
-    
-            
+
             $uploadDirectory = public_path('uploads/products');
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
             }
-    
-           
+
             $photoPath = $photo->move($uploadDirectory, $photo->getClientOriginalName());
-            $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName(); // Save the relative path
+            $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName();
         }
-    
-       
+
         $status = Product::create($data);
-    
+
         if ($status) {
             request()->session()->flash('success', 'Product Successfully added');
         } else {
             request()->session()->flash('error', 'Please try again!!');
         }
-    
+
         return redirect()->route('product.index');
     }
-    
+
+
 
     /**
      * Display the specified resource.
@@ -118,14 +122,14 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $brand=Brand::get();
-        $product=Product::findOrFail($id);
-        $category=Category::where('is_parent',1)->get();
-        $items=Product::where('id',$id)->get();
+        $brand = Brand::get();
+        $product = Product::findOrFail($id);
+        $category = Category::where('is_parent', 1)->get();
+        $items = Product::where('id', $id)->get();
         // return $items;
-        return view('backend.product.edit')->with('product',$product)
-                    ->with('brands',$brand)
-                    ->with('categories',$category)->with('items',$items);
+        return view('backend.product.edit')->with('product', $product)
+            ->with('brands', $brand)
+            ->with('categories', $category)->with('items', $items);
     }
 
     /**
@@ -138,7 +142,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        
+
         $this->validate($request, [
             'title' => 'string|required',
             'summary' => 'string|required',
@@ -155,43 +159,47 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'discount' => 'nullable|numeric'
         ]);
-    
+
         $data = $request->all();
         $data['is_featured'] = $request->input('is_featured', 0);
-    
+
+        // Check authenticated user's role
+        $user = auth()->user();
+        if ($user && $user->role_id == 5) {
+            $data['status'] = 'inactive'; // Force status to inactive
+            $data['added_by'] = $user->id; // Set added_by
+        }
+
         // Handle the photo upload if a new photo is provided
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             $photo = $request->file('photo');
-    
-            // Define the product images directory
+
             $uploadDirectory = public_path('uploads/products');
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
             }
-    
-            // Delete the old image if it exists
+
+            // Delete old image if it exists
             if ($product->photo && file_exists(public_path($product->photo))) {
                 unlink(public_path($product->photo));
             }
-    
-            // Store the new photo and get the relative path
+
             $photoPath = $photo->move($uploadDirectory, $photo->getClientOriginalName());
-            $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName(); // Save the relative path
+            $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName();
         }
-    
-        // Update the product
+
         $status = $product->fill($data)->save();
-    
+
         if ($status) {
             request()->session()->flash('success', 'Product Successfully updated');
         } else {
             request()->session()->flash('error', 'Please try again!!');
         }
-    
+
         return redirect()->route('product.index');
     }
-    
-    
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -201,14 +209,27 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product=Product::findOrFail($id);
-        $status=$product->delete();
-        
-        if($status){
-            request()->session()->flash('success','Product successfully deleted');
+        $product = Product::findOrFail($id);
+        $status = $product->delete();
+
+        if ($status) {
+            request()->session()->flash('success', 'Product successfully deleted');
+        } else {
+            request()->session()->flash('error', 'Error while deleting product');
         }
-        else{
-            request()->session()->flash('error','Error while deleting product');
+        return redirect()->route('product.index');
+    }
+
+    public function updateStatus(Request $request)
+    {
+
+        $product = Product::find($request->id);
+
+        if ($product) {
+            $product->status = $request->status;
+            $product->save();
+
+            request()->session()->flash('success', 'Product updated  successfully');
         }
         return redirect()->route('product.index');
     }

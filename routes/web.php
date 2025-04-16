@@ -151,6 +151,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('assignpermissions', RolePermissionController::class);
 
+    Route::post('/product/status/update', [ProductController::class, 'updateStatus'])->name('product.status.update');
 
     Route::resource('roles', RoleController::class);
 
