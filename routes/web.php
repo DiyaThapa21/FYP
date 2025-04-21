@@ -50,8 +50,13 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('user/logout', 'logout')->name('user.logout');
     Route::get('user/register', 'register')->name('register.form');
     Route::post('user/register', 'registerSubmit')->name('register.submit');
+    Route::get('password/forget', 'showForgotForm')->name('password.request');
+    Route::post('password/email', 'sendResetLink')->name('password.email');
+    Route::get('password/reset/{token}', 'showResetForm')->name('password.reset');
+    Route::post('password/reset', 'resetPassword')->name('password.update');
 
-    Route::get('password-reset', 'showResetForm')->name('password.fromreset');
+
+
     Route::get('/', 'home')->name('home');
     Route::get('/home', 'index');
     Route::get('/about-us', 'aboutUs')->name('about-us');
@@ -80,6 +85,8 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('/order/show/{id}', [HomeController::class, 'ordershow'])->name('user.order.show');
     Route::delete('/order/delete/{id}', [HomeController::class, 'userOrderDelete'])->name('user.order.delete');
 
+
+    Route::post('/postuser-review', [HomeController::class, 'productReviewStore'])->name('user.productreview.store');
     Route::get('/user-review', [HomeController::class, 'productReviewIndex'])->name('user.productreview.index');
     Route::delete('/user-review/delete/{id}', [HomeController::class, 'productReviewDelete'])->name('user.productreview.delete');
     Route::get('/user-review/edit/{id}', [HomeController::class, 'productReviewEdit'])->name('user.productreview.edit');
@@ -102,6 +109,8 @@ Route::middleware('auth')->group(function () {
         Route::post('cart-update', 'cartUpdate')->name('cart.update');
         Route::get('/checkout', 'checkout')->name('checkout');
     });
+
+    Route::resource('/review', ProductReviewController::class);
 
     Route::controller(WishlistController::class)->group(function () {
         Route::get('/wishlist/{slug}', 'wishlist')->name('add-to-wishlist');
@@ -129,8 +138,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::post('/profile/{id}', [AdminController::class, 'profileUpdate'])->name('profile-update');
     Route::get('settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('setting/update', [AdminController::class, 'settingsUpdate'])->name('settings.update');
+    Route::get('/notification/{id}/read', [NotificationController::class, 'markAsRead'])->name('notification.read');
 
-
+    Route::resource('/review', ProductReviewController::class);
     Route::resources([
         'users' => UsersController::class,
         'banner' => BannerController::class,
@@ -144,7 +154,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         'order' => OrderController::class,
         'shipping' => ShippingController::class,
         'coupon' => CouponController::class,
-        'review' => ProductReviewController::class,
+
         'comment' => PostCommentController::class,
         'message' => MessageController::class,
     ]);

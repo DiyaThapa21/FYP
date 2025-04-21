@@ -11,7 +11,7 @@
                 <div class="bread-inner">
                     <ul class="bread-list">
                         <li><a href="{{route('home')}}">Home<i class="ti-arrow-right"></i></a></li>
-                        <li class="active"><a href="javascript:void(0);">Login</a></li>
+                        <li class="active"><a href="javascript:void(0);">Forget Password</a></li>
                     </ul>
                 </div>
             </div>
@@ -26,10 +26,10 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3 col-12">
                 <div class="login-form">
-                    <h2>Login</h2>
-                    <p>Please login in order to checkout more quickly</p>
+                    <h2>Forget Password</h2>
+                    <p>Please enter your mail to forget password</p>
                     <!-- Form -->
-                    <form class="form" method="post" action="{{route('login.submit')}}">
+                    <form class="form" method="post" action="{{ route('password.email') }}">
                         @csrf
                         <div class="row">
                             <div class="col-12">
@@ -42,25 +42,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label>Your Password<span>*</span></label>
-                                    <input type="password" name="password" placeholder="" required="required"
-                                        value="{{old('password')}}">
-                                    @error('password')
-                                    <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                    <div class="mt-2">
-                                        <a href="{{ route('password.request') }}" class="text-primary"
-                                            style="font-size: 0.9rem;">Forgot Password?</a>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div class="col-12">
                                 <div class="form-group login-btn">
-                                    <button class="btn" type="submit">Login</button>
-                                    <a href="{{route('register.form')}}" class="btn">Register</a>
+                                    <button class="btn" type="submit">Submit</button>
+                                    <a href="{{route('login.form')}}" class="btn">Back to Login</a>
 
                                 </div>
 

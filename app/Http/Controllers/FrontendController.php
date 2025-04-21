@@ -18,6 +18,8 @@ use DB;
 use Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 
 class FrontendController extends Controller
 {
@@ -46,7 +48,6 @@ class FrontendController extends Controller
 
     public function aboutUs()
     {
-
         return view('frontend.pages.about-us');
     }
 
@@ -382,26 +383,49 @@ class FrontendController extends Controller
     {
         return view('frontend.pages.register');
     }
+
     public function registerSubmit(Request $request)
     {
-        // return $request->all();
-        $this->validate($request, [
-            'name' => 'string|required|min:2',
-            'email' => 'string|required|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:2',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[A-Z])(?=.*[\W_]).+$/'
+            ],
+        ], [
+            'name.required' => 'Please enter your name.',
+            'name.min' => 'Name must be at least 2 characters.',
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email is already taken.',
+            'password.required' => 'Please enter a password.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Passwords do not match.',
+            'password.regex' => 'Password must include at least one uppercase letter and one special character.',
         ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
         $data = $request->all();
-        // dd($data);
-        $check = $this->create($data);
-        Session::put('user', $data['email']);
-        if ($check) {
-            request()->session()->flash('success', 'Successfully registered');
+        $user = $this->create($data);
+
+        if ($user) {
+            Auth::login($user);
+            Session::put('user', $user->email);
+            request()->session()->flash('success', 'Successfully registered and logged in');
             return redirect()->route('home');
         } else {
             request()->session()->flash('error', 'Please try again!');
             return back();
         }
     }
+
     public function create(array $data)
     {
         return User::create([
@@ -411,10 +435,60 @@ class FrontendController extends Controller
             'status' => 'active'
         ]);
     }
-    // Reset password
-    public function showResetForm()
+
+
+    public function showForgotForm()
     {
-        return view('auth.passwords.old-reset');
+        return view('frontend.pages.forgetpassword');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with('success', 'Reset link sent to your email.')
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function showResetForm($token)
+    {
+        return view('frontend.pages.reset', ['token' => $token]);
+    }
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email|exists:users,email',
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                'regex:/^(?=.*[A-Z])(?=.*[\W_]).+$/'
+            ],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                Auth::login($user); // auto-login after reset
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('home')->with('success', 'Password has been reset!')
+            : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function subscribe(Request $request)

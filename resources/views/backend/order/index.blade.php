@@ -75,7 +75,41 @@
           @endforeach
         </tbody>
       </table>
-      <span style="float:right">{{$orders->links()}}</span>
+      <nav aria-label="Page navigation example">
+        @if ($orders->hasPages())
+        <ul class="pagination mb-0">
+
+          @if ($orders->onFirstPage())
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          @else
+          <li class="page-item">
+            <a class="page-link" href="{{ $orders->previousPageUrl() }}" rel="prev">Previous</a>
+          </li>
+          @endif
+
+
+          @foreach ($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+          @if ($page == $orders->currentPage())
+          <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+          @else
+          <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+          @endif
+          @endforeach
+
+
+          @if ($orders->hasMorePages())
+          <li class="page-item">
+            <a class="page-link" href="{{ $orders->nextPageUrl() }}" rel="next">Next</a>
+          </li>
+          @else
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+          @endif
+        </ul>
+        @endif
+
+
+
+      </nav>
       @else
       <h6 class="text-center">No orders found!!! Please order some products</h6>
       @endif

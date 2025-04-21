@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
-
+use App\Models\Notification;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -18,7 +18,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('addedBy')->paginate();
+        $products = Product::with('addedBy')->paginate(10);
         // return $products;
         return view('backend.product.index')->with('products', $products);
     }
@@ -59,7 +59,8 @@ class ProductController extends Controller
             'status' => 'required|in:active,inactive',
             'condition' => 'in:default,new,hot',
             'price' => 'required|numeric',
-            'discount' => 'nullable|numeric'
+            'discount' => 'nullable|numeric',
+            'tutorial_link' => 'nullable|string'
         ]);
 
         $data = $request->all();
@@ -71,7 +72,6 @@ class ProductController extends Controller
         $data['slug'] = $slug;
         $data['is_featured'] = $request->input('is_featured', 0);
 
-
         $user = auth()->user();
         if ($user && $user->role_id == 5) {
             $data['status'] = 'inactive';
@@ -80,20 +80,36 @@ class ProductController extends Controller
 
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             $photo = $request->file('photo');
-
             $uploadDirectory = public_path('uploads/products');
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
             }
-
-            $photoPath = $photo->move($uploadDirectory, $photo->getClientOriginalName());
+            $photo->move($uploadDirectory, $photo->getClientOriginalName());
             $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName();
         }
 
-        $status = Product::create($data);
+        $product = Product::create($data);
 
-        if ($status) {
+        if ($product) {
             request()->session()->flash('success', 'Product Successfully added');
+
+
+            if ($user && $user->role_id == 5) {
+                Notification::create([
+                    'data' => 'A new product "' . $product->title . '" was added by staff.',
+                    'sender_id' => $user->id,
+                    'receiver_id' => 1,
+                    'product_id' => $product->id,
+                    'read_at' => null,
+                    'is_read' => false,
+                ]);
+
+
+                session()->push('new_notifications', [
+                    'message' => 'New product "' . $product->title . '" added by staff.',
+                    'time' => now()->toDateTimeString(),
+                ]);
+            }
         } else {
             request()->session()->flash('error', 'Please try again!!');
         }

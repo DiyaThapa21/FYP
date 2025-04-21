@@ -182,10 +182,14 @@
                             <div class="nav-main">
                                 <!-- Tab Nav -->
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item"><a class="nav-link active" data-toggle="tab"
-                                            href="#description" role="tab">Description</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#reviews"
-                                            role="tab">Reviews</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#description"
+                                            role="tab">Description</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews</a>
+                                    </li>
+
                                 </ul>
                                 <!--/ End Tab Nav -->
                             </div>
@@ -202,13 +206,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--/ End Description Tab -->
+
                                 <!-- Reviews Tab -->
                                 <div class="tab-pane fade" id="reviews" role="tabpanel">
                                     <div class="tab-single review-panel">
                                         <div class="row">
                                             <div class="col-12">
-
                                                 <!-- Review -->
                                                 <div class="comment-review">
                                                     <div class="add-review">
@@ -218,10 +221,9 @@
                                                     </div>
                                                     <h4>Your Rating <span class="text-danger">*</span></h4>
                                                     <div class="review-inner">
-                                                        <!-- Form -->
                                                         @auth
-                                                        <form class="form" method="post"
-                                                            action="{{route('review.store',$product_detail->slug)}}">
+                                                        <form method="POST"
+                                                            action="{{ route('user.productreview.store') }}">
                                                             @csrf
                                                             <div class="row">
                                                                 <div class="col-lg-12 col-12">
@@ -231,6 +233,8 @@
                                                                                 <input class="star-rating__input"
                                                                                     id="star-rating-5" type="radio"
                                                                                     name="rate" value="5">
+                                                                                <input type="hidden" name="product_id"
+                                                                                    value="{{$product_detail->id}}">
                                                                                 <label
                                                                                     class="star-rating__ico fa fa-star-o"
                                                                                     for="star-rating-5"
@@ -289,24 +293,16 @@
                                                         @else
                                                         <p class="text-center p-5">
                                                             You need to <a href="{{route('login.form')}}"
-                                                                style="color:rgb(54, 54, 204)">Login</a> OR <a
-                                                                style="color:blue"
+                                                                style="color:rgb(54, 54, 204)">Login</a> OR
+                                                            <a style="color:blue"
                                                                 href="{{route('register.form')}}">Register</a>
-
                                                         </p>
-                                                        <!--/ End Form -->
                                                         @endauth
                                                     </div>
                                                 </div>
 
                                                 <div class="ratting-main">
                                                     <div class="avg-ratting">
-                                                        {{-- @php 
-																			$rate=0;
-																			foreach($product_detail->rate as $key=>$rate){
-																				$rate +=$rate
-																			}
-																		@endphp --}}
                                                         <h4>{{ceil($product_detail->getReview->avg('rate'))}}
                                                             <span>(Overall)</span>
                                                         </h4>
@@ -328,7 +324,6 @@
                                                         <div class="rating-des">
                                                             <h6>{{$data->user_info['name']}}</h6>
                                                             <div class="ratings">
-
                                                                 <ul class="rating">
                                                                     @for($i=1; $i<=5; $i++) @if($data->rate>=$i)
                                                                         <li><i class="fa fa-star"></i></li>
@@ -343,26 +338,57 @@
                                                             <p>{{$data->review}}</p>
                                                         </div>
                                                     </div>
-                                                    <!--/ End Single Rating -->
                                                     @endforeach
                                                 </div>
-
-                                                <!--/ End Review -->
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!--/ End Reviews Tab -->
+
+
+
+                                <!--/ End YouTube Video Tab -->
+
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </section>
 <!--/ End Shop Single -->
+@php
+preg_match('/src="([^"]+)"/', $product_detail->tutorial_link, $matches);
+$videoSrc = $matches[1] ?? null;
+@endphp
+
+@if($videoSrc)
+<div class="product-area most-popular related-product section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2>Tutorial Video</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-4">
+                <div class="video-container" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+                    <iframe
+                        src="{{ $videoSrc }}"
+                        frameborder="0"
+                        allowfullscreen
+                        style="position:absolute;top:0;left:0;width:100%;height:80%;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 <!-- Start Most Popular -->
 <div class="product-area most-popular related-product section">

@@ -47,7 +47,8 @@
                     <option value="">--Select any category--</option>
                     @foreach($categories as $key=>$cat_data)
                     <option value='{{$cat_data->id}}' {{(($product->cat_id==$cat_data->id)? 'selected' : '')}}>
-                        {{$cat_data->title}}</option>
+                        {{$cat_data->title}}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -136,7 +137,13 @@
                 <span class="text-danger">{{$message}}</span>
                 @enderror
             </div>
-
+            <div class="form-group">
+                <label for="discount" class="col-form-label">Tutorial Link</label>
+                <textarea class="form-control" name="tutorial_link">{{$product->tutorial_link}}</textarea>
+                @error('tutorial_link')
+                <span class="text-danger">{{$message}}</span>
+                @enderror
+            </div>
             <div class="form-group">
                 <label for="status" class="col-form-label">Status <span class="text-danger">*</span></label>
                 <select name="status" class="form-control">
@@ -167,68 +174,68 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
 <script>
-$('#lfm').filemanager('image');
+    $('#lfm').filemanager('image');
 
-$(document).ready(function() {
-    $('#summary').summernote({
-        placeholder: "Write short description.....",
-        tabsize: 2,
-        height: 150
+    $(document).ready(function() {
+        $('#summary').summernote({
+            placeholder: "Write short description.....",
+            tabsize: 2,
+            height: 150
+        });
     });
-});
-$(document).ready(function() {
-    $('#description').summernote({
-        placeholder: "Write detail Description.....",
-        tabsize: 2,
-        height: 150
+    $(document).ready(function() {
+        $('#description').summernote({
+            placeholder: "Write detail Description.....",
+            tabsize: 2,
+            height: 150
+        });
     });
-});
 </script>
 
 <script>
-var child_cat_id = '{{$product->child_cat_id}}';
-// alert(child_cat_id);
-$('#cat_id').change(function() {
-    var cat_id = $(this).val();
+    var child_cat_id = '{{$product->child_cat_id}}';
+    // alert(child_cat_id);
+    $('#cat_id').change(function() {
+        var cat_id = $(this).val();
 
-    if (cat_id != null) {
-        // ajax call
-        $.ajax({
-            url: "/admin/category/" + cat_id + "/child",
-            type: "POST",
-            data: {
-                _token: "{{csrf_token()}}"
-            },
-            success: function(response) {
-                if (typeof(response) != 'object') {
-                    response = $.parseJSON(response);
-                }
-                var html_option = "<option value=''>--Select any one--</option>";
-                if (response.status) {
-                    var data = response.data;
-                    if (response.data) {
-                        $('#child_cat_div').removeClass('d-none');
-                        $.each(data, function(id, title) {
-                            html_option += "<option value='" + id + "' " + (child_cat_id ==
-                                id ? 'selected ' : '') + ">" + title + "</option>";
-                        });
-                    } else {
-                        console.log('no response data');
+        if (cat_id != null) {
+            // ajax call
+            $.ajax({
+                url: "/admin/category/" + cat_id + "/child",
+                type: "POST",
+                data: {
+                    _token: "{{csrf_token()}}"
+                },
+                success: function(response) {
+                    if (typeof(response) != 'object') {
+                        response = $.parseJSON(response);
                     }
-                } else {
-                    $('#child_cat_div').addClass('d-none');
+                    var html_option = "<option value=''>--Select any one--</option>";
+                    if (response.status) {
+                        var data = response.data;
+                        if (response.data) {
+                            $('#child_cat_div').removeClass('d-none');
+                            $.each(data, function(id, title) {
+                                html_option += "<option value='" + id + "' " + (child_cat_id ==
+                                    id ? 'selected ' : '') + ">" + title + "</option>";
+                            });
+                        } else {
+                            console.log('no response data');
+                        }
+                    } else {
+                        $('#child_cat_div').addClass('d-none');
+                    }
+                    $('#child_cat_id').html(html_option);
+
                 }
-                $('#child_cat_id').html(html_option);
+            });
+        } else {
 
-            }
-        });
-    } else {
+        }
 
+    });
+    if (child_cat_id != null) {
+        $('#cat_id').change();
     }
-
-});
-if (child_cat_id != null) {
-    $('#cat_id').change();
-}
 </script>
 @endpush
