@@ -139,6 +139,11 @@ class HomeController extends Controller
         return view('user.review.edit')->with('review', $review);
     }
 
+    public function counterproject()
+    {
+
+        return view('frontend.pages.userdashboard.counterproject');
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -163,6 +168,30 @@ class HomeController extends Controller
 
         return redirect()->route('user.productreview.index');
     }
+
+    public function productReviewStore(Request $request)
+    {
+
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'rate' => 'required|integer|min:1|max:5',
+            'review' => 'required|string|max:1000',
+        ]);
+
+        $data = $request->only(['product_id', 'rate', 'review']);
+        $data['user_id'] = auth()->id();
+
+        $status = ProductReview::create($data);
+
+        if ($status) {
+            return redirect()->back()->with('success', 'Your review has been submitted.');
+        } else {
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.

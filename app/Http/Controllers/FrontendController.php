@@ -10,6 +10,7 @@ use App\Models\PostCategory;
 use App\Models\Post;
 use App\Models\Cart;
 use App\Models\Brand;
+use App\Models\contact;
 use App\User;
 use Auth;
 use Session;
@@ -54,6 +55,22 @@ class FrontendController extends Controller
     public function contact()
     {
         return view('frontend.pages.contact');
+    }
+    public function contactStore(Request $request)
+    {
+        $contact = new contact;
+        $validate_data = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'email|required',
+            'message' => 'required',
+            'subject' => 'required',
+        ]);
+        $contact->name = $validate_data['name'];
+        $contact->email = $validate_data['email'];
+        $contact->subject = $validate_data['subject'];
+        $contact->message = $validate_data['message'];
+        $contact->save();
+        return redirect()->back()->with('success', 'Your queries have been submitted');
     }
 
     public function productDetail($slug)

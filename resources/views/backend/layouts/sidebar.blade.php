@@ -219,7 +219,13 @@
   <div class="sidebar-heading">
     Settings
   </div>
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('contact.index') }}">
 
+      <span>Contact Us</span>
+    </a>
+
+  </li>
   <!-- Posts -->
   @can('manage-roles')
   <li class="nav-item">

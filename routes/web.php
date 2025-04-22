@@ -28,8 +28,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\AdminUserController;
-
-
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProjectCounterController;
 
 // CACHE CLEAR ROUTE
 Route::get('cache-clear', function () {
@@ -55,13 +55,11 @@ Route::controller(FrontendController::class)->group(function () {
     Route::get('password/reset/{token}', 'showResetForm')->name('password.reset');
     Route::post('password/reset', 'resetPassword')->name('password.update');
 
-
-
     Route::get('/', 'home')->name('home');
     Route::get('/home', 'index');
     Route::get('/about-us', 'aboutUs')->name('about-us');
     Route::get('/contact', 'contact')->name('contact');
-    Route::post('/contact/message', [MessageController::class, 'store'])->name('contact.store');
+    Route::post('/contact-store', [FrontendController::class, 'contactStore'])->name('contact.store');
 });
 
 Route::get('/product-cat/{slug}', [FrontendController::class, 'productCat'])->name('product-cat');
@@ -76,6 +74,8 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
 
     Route::get('/membership', [HomeController::class, 'membership'])->name('user-membership');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/counterproject', [HomeController::class, 'counterproject'])->name('user.counterproject');
 
     Route::put('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
 
@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/review', ProductReviewController::class);
 
+    Route::resource('counterincrement', ProjectCounterController::class);
     Route::controller(WishlistController::class)->group(function () {
         Route::get('/wishlist/{slug}', 'wishlist')->name('add-to-wishlist');
         Route::get('wishlist-delete/{id}', 'wishlistDelete')->name('wishlist-delete');
@@ -167,6 +168,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('admins', AdminUserController::class);
 
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
     Route::post('/permissions/add', [PermissionController::class, 'store'])->name('permissions.store');
