@@ -67,6 +67,32 @@
                     @endforeach --}}
                 </select>
             </div>
+            <div class="form-group">
+                <label class="col-form-label">Colors</label>
+                <div id="color-wrapper">
+                    <div class="d-flex align-items-center mb-2">
+                        <input type="color" name="colors[]" class="form-control form-control-color mr-2"
+                            value="#000000">
+                        <button type="button" class="btn btn-sm btn-danger remove-color">X</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-primary" id="add-color">Add Color</button>
+                @error('colors')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="sizes" class="col-form-label">Sizes</label>
+                <select name="sizes[]" id="sizes" class="form-control select2" multiple>
+                    <option value="S" {{ in_array('S', old('sizes', [])) ? 'selected' : '' }}>S</option>
+                    <option value="M" {{ in_array('M', old('sizes', [])) ? 'selected' : '' }}>M</option>
+                    <option value="L" {{ in_array('L', old('sizes', [])) ? 'selected' : '' }}>L</option>
+                    <option value="XL" {{ in_array('XL', old('sizes', [])) ? 'selected' : '' }}>XL</option>
+                </select>
+                @error('sizes')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
 
             <div class="form-group">
                 <label for="price" class="col-form-label">Price(NRS) <span class="text-danger">*</span></label>
@@ -85,23 +111,7 @@
                 <span class="text-danger">{{$message}}</span>
                 @enderror
             </div>
-            <!-- <div class="form-group">
-                <label for="size">IBAN</label>
-                <input type="text" name="size" class="form-control" multiple data-live-search="true"
-                    placeholder="IBAN Number">
-            </div> -->
 
-            <!-- <div class="form-group">
-                <label for="brand_id">Author</label>
-                {{-- {{$brands}} --}}
-
-                <select name="brand_id" class="form-control">
-                    <option value="">--Add Author--</option>
-                    @foreach($brands as $brand)
-                    <option value="{{$brand->id}}">{{$brand->title}}</option>
-                    @endforeach
-                </select>
-            </div> -->
 
             <div class="form-group">
                 <label for="condition">Condition</label>
@@ -165,7 +175,9 @@
 <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 <script src="{{asset('backend/summernote/summernote.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-
+{{-- Select2 --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $('#lfm').filemanager('image');
 
@@ -224,5 +236,25 @@
             });
         } else {}
     })
+</script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        // Add Color Field
+        $('#add-color').click(function() {
+            $('#color-wrapper').append(`
+                <div class="d-flex align-items-center mb-2">
+                    <input type="color" name="colors[]" class="form-control form-control-color mr-2" value="#000000">
+                    <button type="button" class="btn btn-sm btn-danger remove-color">X</button>
+                </div>
+            `);
+        });
+
+        // Remove Color Field
+        $(document).on('click', '.remove-color', function() {
+            $(this).closest('.d-flex').remove();
+        });
+    });
 </script>
 @endpush

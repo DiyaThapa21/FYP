@@ -47,7 +47,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'first_name' => 'string|required',
             'last_name' => 'string|required',
@@ -73,6 +72,13 @@ class OrderController extends Controller
 
         $order_data['sub_total'] = Helper::totalCartPrice();
         $order_data['quantity'] = Helper::cartCount();
+        $cartNotes = Cart::where('user_id', $order_data['user_id'])
+            ->whereNull('order_id')
+            ->pluck('notes')
+            ->filter()
+            ->implode(', ');
+
+        $order_data['notes'] = $cartNotes;
         $order_data['coupon'] = session('coupon')['value'] ?? null;
         $order_data['total_amount'] = Helper::totalCartPrice() + ($shipping ?? 0) - ($order_data['coupon'] ?? 0);
         $order_data['status'] = "new";
@@ -90,6 +96,8 @@ class OrderController extends Controller
                 'product_id' => $cart_item->product_id,
                 'quantity' => $cart_item->quantity,
                 'price' => $cart_item->price,
+                'color' => $cart_item->color,
+                'size' => $cart_item->size,
                 'total' => $cart_item->quantity * $cart_item->price,
             ]);
         }
@@ -123,7 +131,6 @@ class OrderController extends Controller
                 'type' => $expenseAmount >= 8000 ? 2 : ($expenseAmount >= 5000 ? 1 : 0),
             ]);
         }
-
 
         Mail::to($request->email)->send(new OrderConfirmation($order));
 

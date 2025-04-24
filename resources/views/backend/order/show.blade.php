@@ -106,6 +106,11 @@
                   <td>Payment Status</td>
                   <td> : {{$order->payment_status}}</td>
                 </tr>
+
+                <tr>
+                  <td>Order Notes</td>
+                  <td> : {{@$order->notes}}</td>
+                </tr>
               </table>
             </div>
           </div>
@@ -140,6 +145,16 @@
                           <p class="text-truncate font-size-14 mb-1">
                             {{ $item->product->title }}
                           </p>
+                          <div class="text-sm text-muted mt-1">
+                            @if(@$item->color)
+                            <div><strong>Color:</strong> <span
+                                style="display:inline-block;width:15px;height:15px;background-color:{{ $item->color }};border:1px solid #ccc;border-radius:50%;margin-left:5px;"></span>
+                            </div>
+                            @endif
+                            @if(@$item->size)
+                            <div><strong>Size:</strong> {{ $item->size }}</div>
+                            @endif
+                          </div>
                         </div>
                       </td>
                       <td>

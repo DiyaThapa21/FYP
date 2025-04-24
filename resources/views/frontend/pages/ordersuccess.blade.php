@@ -14,11 +14,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="invoice-title">
+                        @if(!empty($order->notes))
+                        <div class="bg-info text-white font-size-10 py-2 px-3 mb-3">
+                            You will receive a confirmation from our team regarding the customization.
+                        </div>
+                        @endif
                         <h4 class="float-end font-size-10">Invoice {{ $order->order_number }} <span
                                 class="badge bg-success font-size-8 ms-2"> {{ $order->payment_status }}</span></h4>
                         <div class="mb-4">
                             <h2 class="mb-1 text-muted">UnkoUneko</h2>
                         </div>
+
                         <div class="text-muted">
                             <p class="mb-1 font-size-10">Pokhara Nepal</p>
                             <p class="mb-1"><i class="uil uil-envelope-alt me-1"></i> test@gmail.com</p>
@@ -90,6 +96,16 @@
                                             <div>
                                                 <h5 class="text-truncate font-size-14 mb-1">{{ $item->product->title }}
                                                 </h5>
+                                                <div class="text-sm text-muted mt-1">
+                                                    @if(@$item->color)
+                                                    <div><strong>Color:</strong> <span
+                                                            style="display:inline-block;width:15px;height:15px;background-color:{{ $item->color }};border:1px solid #ccc;border-radius:50%;margin-left:5px;"></span>
+                                                    </div>
+                                                    @endif
+                                                    @if(@$item->size)
+                                                    <div><strong>Size:</strong> {{ $item->size }}</div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </td>
                                         <td>

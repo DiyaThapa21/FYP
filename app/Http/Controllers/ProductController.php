@@ -50,7 +50,6 @@ class ProductController extends Controller
             'summary' => 'string|required',
             'description' => 'string|nullable',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'size' => 'nullable',
             'stock' => "required|numeric",
             'cat_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
@@ -60,10 +59,14 @@ class ProductController extends Controller
             'condition' => 'in:default,new,hot',
             'price' => 'required|numeric',
             'discount' => 'nullable|numeric',
-            'tutorial_link' => 'nullable|string'
+            'tutorial_link' => 'nullable|string',
+            'colors' => 'nullable|array',
+            'colors.*' => 'string|max:10',
+            'sizes' => 'nullable|array',
+            'sizes.*' => 'string|max:10',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('colors', 'sizes');
         $slug = Str::slug($request->title);
         $count = Product::where('slug', $slug)->count();
         if ($count > 0) {
@@ -88,11 +91,15 @@ class ProductController extends Controller
             $data['photo'] = 'uploads/products/' . $photo->getClientOriginalName();
         }
 
+        // Store colors and sizes as JSON arrays
+        $data['color'] = json_encode($request->input('colors', []));
+        $data['size'] = json_encode($request->input('sizes', []));
+
+
         $product = Product::create($data);
 
         if ($product) {
             request()->session()->flash('success', 'Product Successfully added');
-
 
             if ($user && $user->role_id == 5) {
                 Notification::create([
@@ -103,7 +110,6 @@ class ProductController extends Controller
                     'read_at' => null,
                     'is_read' => false,
                 ]);
-
 
                 session()->push('new_notifications', [
                     'message' => 'New product "' . $product->title . '" added by staff.',
@@ -116,6 +122,7 @@ class ProductController extends Controller
 
         return redirect()->route('product.index');
     }
+
 
 
 

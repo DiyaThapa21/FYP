@@ -69,7 +69,11 @@
       </div>
     </div>
   </li>
-
+  <li class="nav-item">
+    <a class="nav-link" href="{{route('coupon.index')}}">
+      <i class="fas fa-table"></i>
+      <span>Coupon</span></a>
+  </li>
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#productCollapse"
       aria-expanded="true" aria-controls="productCollapse">
@@ -174,6 +178,7 @@
     </div>
   </li>
 
+
   <!-- Category -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#postCategoryCollapse"
@@ -219,6 +224,9 @@
   <div class="sidebar-heading">
     Settings
   </div>
+
+  <!-- Posts -->
+
   <li class="nav-item">
     <a class="nav-link " href="{{ route('contact.index') }}">
 
@@ -226,7 +234,16 @@
     </a>
 
   </li>
-  <!-- Posts -->
+
+  @can('manage-roles')
+  <li class="nav-item">
+    <a class="nav-link " href="{{ route('roles.index') }}">
+
+      <span>Role</span>
+    </a>
+
+  </li>
+  @endcan
   @can('manage-roles')
   <li class="nav-item">
     <a class="nav-link " href="{{ route('roles.index') }}">

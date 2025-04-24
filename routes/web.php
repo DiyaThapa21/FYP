@@ -109,6 +109,7 @@ Route::middleware('auth')->group(function () {
         Route::post('cart-update', 'cartUpdate')->name('cart.update');
         Route::get('/checkout', 'checkout')->name('checkout');
     });
+    Route::post('/coupon-store', [CouponController::class, 'couponStore'])->name('coupon-store');
 
     Route::resource('/review', ProductReviewController::class);
 

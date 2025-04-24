@@ -114,7 +114,8 @@
 
         <div class="greeting">
             <p>Dear {{ $order->user->first_name }},</p>
-            <p>Thank you for shopping with us! We are pleased to confirm that your order has been successfully placed.</p>
+            <p>Thank you for shopping with us! We are pleased to confirm that your order has been successfully placed.
+            </p>
         </div>
 
         <div class="order-details">
@@ -132,6 +133,8 @@
                     <tr>
                         <th>Product</th>
                         <th>Quantity</th>
+
+
                         <th>Price (Each)</th>
                         <th>Total</th>
                     </tr>
@@ -139,7 +142,18 @@
                 <tbody>
                     @foreach($order->orderItems as $item)
                     <tr>
-                        <td>{{ $item->product->title }}</td>
+                        <td>{{ $item->product->title }}
+                            <div class="text-sm text-muted mt-1">
+                                @if(@$item->color)
+                                <div><strong>Color:</strong> <span
+                                        style="display:inline-block;width:15px;height:15px;background-color:{{ $item->color }};border:1px solid #ccc;border-radius:50%;margin-left:5px;"></span>
+                                </div>
+                                @endif
+                                @if(@$item->size)
+                                <div><strong>Size:</strong> {{ $item->size }}</div>
+                                @endif
+                            </div>
+                        </td>
                         <td>{{ $item->quantity }}</td>
                         <td>{{ number_format($item->price, 2) }}</td>
                         <td>{{ number_format($item->price * $item->quantity, 2) }}</td>
@@ -154,7 +168,8 @@
         </div>
 
         <div class="footer">
-            <p>We will notify you once your order is shipped. If you have any questions, feel free to contact us at <a href="mailto:support@yourwebsite.com">support@unkouneko.com</a>.</p>
+            <p>We will notify you once your order is shipped. If you have any questions, feel free to contact us at <a
+                    href="mailto:support@yourwebsite.com">support@unkouneko.com</a>.</p>
             <p>&copy; {{ date('Y') }} Unko Uneko. All rights reserved.</p>
         </div>
     </div>

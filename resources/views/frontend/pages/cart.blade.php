@@ -46,9 +46,13 @@
                                 @endphp
                                 <td class="image" data-title="No"><img src="{{$photo[0]}}" alt="{{$photo[0]}}"></td>
                                 <td class="product-des" data-title="Description">
-                                    <p class="product-name"><a href="{{route('product-detail',$cart->product['slug'])}}"
+                                    <p class="product-name mb-2"><a href="{{route('product-detail',$cart->product['slug'])}}"
                                             target="_blank">{{$cart->product['title']}}</a></p>
-                                    <p class="product-des">{!!($cart['summary']) !!}</p>
+
+
+                                    <p class="product-des" style="background-color: {{$cart->color}}; display: inline-block; width: 20px; height: 20px;
+                      border-radius: 50%; border: 2px solid #ddd; transition: all 0.3s ease;"></p>
+                                    <p class="product-des" style="font-size:25px;">{{$cart->size}}</p>
                                 </td>
                                 <td class="price" data-title="Price"><span>Rs {{number_format($cart['price'],2)}}</span>
                                 </td>
@@ -114,8 +118,8 @@
                         <div class="col-lg-8 col-md-5 col-12">
                             <div class="left">
                                 <div class="coupon">
-                                    <form action="" method="POST">
-
+                                    <form action="{{route('coupon-store')}}" method="POST">
+                                        @csrf
                                         <input name="code" placeholder="Enter Your Coupon">
                                         <button class="btn">Apply</button>
                                     </form>

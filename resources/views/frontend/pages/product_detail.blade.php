@@ -99,33 +99,10 @@
                                 </p>
                                 <p class="description">{!!($product_detail->summary)!!}</p>
                             </div>
-                            <!--/ End Description -->
-                            <!-- Color -->
-                            {{-- <div class="color">
-												<h4>Available Options <span>Color</span></h4>
-												<ul>
-													<li><a href="#" class="one"><i class="ti-check"></i></a></li>
-													<li><a href="#" class="two"><i class="ti-check"></i></a></li>
-													<li><a href="#" class="three"><i class="ti-check"></i></a></li>
-													<li><a href="#" class="four"><i class="ti-check"></i></a></li>
-												</ul>
-											</div> --}}
-                            <!--/ End Color -->
-                            <!-- IBAN -->
-                            @if($product_detail->size)
-                            <div class="size mt-4">
-                                <ul style="list-style-type: none; padding: 0;">
-                                    @php
-                                    $sizes = explode(',', $product_detail->size);
-                                    @endphp
-                                    @foreach($sizes as $size)
-                                    <li style="font-weight: bold; padding: 5px 0;">
-                                        <span style="color: orange;">IBAN-</span><span>{{$size}}</span>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
+
+
+
+
                             <!--/ IBAN -->
                             <!-- Product Buy -->
                             <div class="product-buy">
@@ -144,6 +121,9 @@
                                             <input type="hidden" name="slug" value="{{$product_detail->slug}}">
                                             <input type="text" name="quant[1]" class="input-number" data-min="1"
                                                 data-max="1000" value="1" id="quantity">
+                                            <input type="hidden" name="selected_color" id="selectedColorInput" value="">
+                                            <input type="hidden" name="selected_size" id="selectedSizeInput" value="">
+                                            <input type="hidden" name="product_note" id="productNoteInput">
                                             <div class="button plus">
                                                 <button type="button" class="btn btn-primary btn-number"
                                                     data-type="plus" data-field="quant[1]">
@@ -189,6 +169,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#customization"
+                                            role="tab">Customization</a>
+                                    </li>
                                     @php
                                     preg_match('/src="([^"]+)"/', $product_detail->tutorial_link, $matches);
                                     $videoSrc = $matches[1] ?? null;
@@ -210,6 +195,106 @@
                                             <div class="col-12">
                                                 <div class="single-des">
                                                     <p>{!! ($product_detail->description) !!}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade show" id="customization" role="tabpanel">
+                                    <div class="tab-single">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="product-des">
+
+                                                    @php
+                                                    $colors = isset($product_detail->color) ?
+                                                    json_decode($product_detail->color) : null;
+                                                    $sizes = isset($product_detail->size) ?
+                                                    json_decode($product_detail->size) : null;
+                                                    @endphp
+
+                                                    @if(is_array($colors) && count($colors) > 0)
+                                                    <div class="color mt-4">
+                                                        <p class="mb-2 text-lg font-semibold">Available Options <span
+                                                                class="font-normal">Color</span></p>
+                                                        <ul class="d-flex gap-2 p-0 m-0 flex-wrap"
+                                                            style="list-style: none;">
+                                                            @foreach($colors as $color)
+                                                            <li>
+                                                                <a href="javascript:void(0);" class="color-select"
+                                                                    data-color="{{ $color }}" style="background-color: {{ $color }}; display: inline-block; width: 30px; height: 30px;
+                      border-radius: 50%; border: 2px solid #ddd; transition: all 0.3s ease;">
+                                                                </a>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                    @endif
+
+                                                    @if($sizes)
+                                                    <div class="size mt-4">
+                                                        <p class="mb-2 text-lg font-semibold">Available Options <span
+                                                                class="font-normal">Size</span></p>
+                                                        <ul class="d-flex gap-2 p-0 m-0 flex-wrap"
+                                                            style="list-style: none;">
+                                                            @foreach($sizes as $size)
+                                                            <li>
+                                                                <a href="javascript:void(0);" class="size-select  border border-gray-300 rounded-md hover:bg-gray-200 transition
+                      cursor-pointer d-inline-block" data-size="{{ $size }}">
+                                                                    {{ $size }}
+                                                                </a>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                    @endif
+
+                                                    <div class="notes mt-4">
+                                                        <p class="mb-2 text-lg font-semibold">Add a Note</p>
+                                                        <textarea id="notesTextarea" rows="3" class="form-control w-100"
+                                                            placeholder="Type your notes here..."></textarea>
+
+                                                    </div>
+
+                                                    <script>
+                                                        document.querySelectorAll('.color-select').forEach(el => {
+                                                            el.addEventListener('click', function() {
+                                                                document.querySelectorAll('.color-select')
+                                                                    .forEach(c => c.style.border =
+                                                                        '2px solid #ddd');
+                                                                this.style.border = '2px solid #000';
+
+                                                                const selectedColor = this.getAttribute(
+                                                                    'data-color');
+                                                                document.getElementById(
+                                                                        'selectedColorInput').value =
+                                                                    selectedColor;
+                                                            });
+                                                        });
+
+
+                                                        document.querySelectorAll('.size-select').forEach(el => {
+                                                            el.addEventListener('click', function() {
+                                                                document.querySelectorAll('.size-select')
+                                                                    .forEach(s => s.classList.remove(
+                                                                        'bg-dark', 'text-white'));
+                                                                this.classList.add('bg-dark', 'text-white');
+
+                                                                const selectedSize = this.getAttribute(
+                                                                    'data-size');
+                                                                document.getElementById('selectedSizeInput')
+                                                                    .value = selectedSize;
+                                                            });
+                                                        });
+
+                                                        document.getElementById('notesTextarea').addEventListener('input',
+                                                            function() {
+                                                                document.getElementById('productNoteInput').value = this
+                                                                    .value;
+                                                            });
+                                                    </script>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -319,11 +404,11 @@
                                                     </div>
                                                     @foreach($product_detail['getReview'] as $data)
                                                     <!-- Single Rating -->
-                                                    <div class="single-rating">
+                                                    <div class="single-rating mb-4">
                                                         <div class="rating-author">
                                                             @if($data->user_info['photo'])
                                                             <img src="{{$data->user_info['photo']}}"
-                                                                alt="{{$data->user_info['photo']}}">
+                                                                alt="{{$data->user_info['name']}}">
                                                             @else
                                                             <img src="{{asset('backend/img/avatar.png')}}"
                                                                 alt="Profile.jpg">
@@ -333,7 +418,7 @@
                                                             <h6>{{$data->user_info['name']}}</h6>
                                                             <div class="ratings">
                                                                 <ul class="rating">
-                                                                    @for($i=1; $i<=5; $i++) @if($data->rate>=$i)
+                                                                    @for($i=1; $i<=5; $i++) @if($data->rate >= $i)
                                                                         <li><i class="fa fa-star"></i></li>
                                                                         @else
                                                                         <li><i class="fa fa-star-o"></i></li>
@@ -344,6 +429,27 @@
                                                                 </div>
                                                             </div>
                                                             <p>{{$data->review}}</p>
+
+                                                            @if($data->reply)
+
+                                                            <div
+                                                                class="admin-reply mt-3 ms-3 ps-3 border-l-4 border-blue-500">
+                                                                <div class="flex items-start gap-2">
+                                                                    <div class="rating-author mb-4">
+                                                                        <img src="{{asset('backend/img/avatar.png')}}"
+                                                                            alt="Admin"
+                                                                            class="w-[30px] h-[30px] rounded-full">
+                                                                    </div>
+                                                                    <div>
+                                                                        <h6 class="text-primary font-bold text-sm">Admin
+                                                                        </h6>
+                                                                        <p class="text-sm text-gray-600">
+                                                                            {{ $data->reply }}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     @endforeach
@@ -397,7 +503,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="section-title">
-                    <h2>Related Books</h2>
+                    <h2>Related Products</h2>
                 </div>
             </div>
         </div>
@@ -425,7 +531,8 @@
                                 <div class="product-action">
                                     <a title="Quick View" href="{{ route('product-detail', $data->slug) }}"><i
                                             class="ti-eye"></i><span>Quick View</span></a>
-                                    <a title="Wishlist" href="{{route('add-to-wishlist',$product_detail->slug)}}"><i class="ti-heart"></i><span>Add to
+                                    <a title="Wishlist" href="{{route('add-to-wishlist',$product_detail->slug)}}"><i
+                                            class="ti-heart"></i><span>Add to
                                             Wishlist</span></a>
 
                                 </div>
