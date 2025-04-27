@@ -25,7 +25,7 @@
 <!-- Start Checkout -->
 <section class="shop checkout section">
     <div class="container">
-        <form class="form" method="POST" action="{{route('cart.order')}}">
+        <form class="form" method="POST" action="">
             @csrf
             <div class="row">
 
@@ -157,29 +157,40 @@
                                 </ul>
                             </div>
                         </div>
-                        <!--/ End Order Widget -->
-                        <!-- Order Widget -->
+
                         <div class="single-widget">
                             <h2>Payments</h2>
                             <div class="content">
                                 <div class="checkbox">
-                                    <form-group>
-                                        <input name="payment_method" type="radio" value="cod" id="cod_payment"> <label>
+                                    <div class="payment-options">
+                                        <label><input name="payment_method" type="radio" value="cod" id="cod_payment">
                                             Cash On Delivery</label><br>
-                                        <input name="payment_method" type="radio" value="khalti" id="khalti_payment">
-                                        <label> Khalti</label>
-                                    </form-group>
+                                        <label><input name="payment_method" type="radio" value="khalti"
+                                                id="khalti_payment"> Khalti</label><br>
+                                        <label><input name="payment_method" type="radio" value="esewa"
+                                                id="esewa_payment"> Esewa</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!--/ End Order Widget -->
-                        <!-- Payment Method Widget -->
-                        <div class="single-widget payement">
-                            <div class="content">
-                                <img src="{{('backend/img/payment-method.png')}}" alt="#">
-                            </div>
-                        </div>
+                        <style>
+                            .payment-options {
+                                display: flex;
+                                flex-direction: column;
+                                /* gap: 10px; */
+
+                            }
+
+                            .payment-options label {
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+
+                            }
+                        </style>
+
+
                         <!--/ End Payment Method Widget -->
                         <!-- Button Widget -->
                         <div class="single-widget get-button">
@@ -331,24 +342,39 @@
             $('#order_total_price span').text('Rs ' + (subtotal + cost - coupon).toFixed(2));
         });
 
+        $('#checkout-btn').click(function(e) {
+            e.preventDefault();
 
-        $('#khalti_payment').click(function() {
-            var selectedPaymentMethod = $(this).val();
-            if (selectedPaymentMethod === 'khalti') {
-
-                checkout.show({
-                    amount: 1000
-                });
+            let selectedPaymentMethod = $('input[name=payment_method]:checked').val();
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method.');
+                return;
             }
-        });
 
-        $('#checkout-btn').click(function() {
+            // Calculate dynamic total amount
+            let subtotal = parseFloat($('.order_subtotal').data('price'));
+            let shipping = parseFloat($('.shipping select[name=shipping]').find('option:selected').data(
+                'price')) || 0;
+            let coupon = parseFloat($('.coupon_price').data('price')) || 0;
+            let totalAmount = subtotal + shipping - coupon;
 
-            $('form.form').submit();
-
+            if (selectedPaymentMethod === 'khalti') {
+                checkout.show({
+                    amount: totalAmount * 100 // Khalti expects paisa
+                });
+            } else {
+                // Dynamically set form action
+                if (selectedPaymentMethod === 'cod') {
+                    $('.form').attr('action', "{{ route('cart.order') }}"); // Define this route in web.php
+                } else if (selectedPaymentMethod === 'esewa') {
+                    $('.form').attr('action', "{{ route('esewa.pay') }}");
+                }
+                $('.form').submit(); // Submit form normally
+            }
         });
     });
 
+    // Khalti Config
     var config = {
         publicKey: "test_public_key_6b9f20329f55454bb9a38e4a40f136fb",
         productIdentity: "1234567890",
@@ -382,19 +408,18 @@
                                     "_token": "{{ csrf_token() }}"
                                 },
                                 success: function(res) {
-
-                                    $('input[name=payment_method][value="khalti"]').prop('checked', true);
-                                    console.log('Payment verified and payment method set to Khalti');
-                                    $('form.form').submit();
+                                    $('.form').attr('action', "{{ route('cart.order') }}");
+                                    $('input[name=payment_method][value="khalti"]').prop(
+                                        'checked', true);
+                                    $('.form').submit();
                                 },
                                 error: function(xhr, status, error) {
-                                    console.error('Error storing payment:', error);
+                                    console.error('Error storing Khalti payment:', error);
                                 }
                             });
-                            console.log('Payment verification response:', res);
                         },
                         error: function(xhr, status, error) {
-                            console.error('Error verifying payment:', error);
+                            console.error('Error verifying Khalti payment:', error);
                         }
                     });
                 }
@@ -403,7 +428,7 @@
                 console.error('Khalti error:', error);
             },
             onClose() {
-                console.log('Khalti widget is closing');
+                console.log('Khalti widget closed');
             }
         }
     };

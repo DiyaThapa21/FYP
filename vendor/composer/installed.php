@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-fypproject',
+        'version' => 'dev-fypproject',
+        'reference' => '2eb551003448a01c0ed14bf12173b0fd4ab05cbf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -380,9 +380,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-fypproject',
+            'version' => 'dev-fypproject',
+            'reference' => '2eb551003448a01c0ed14bf12173b0fd4ab05cbf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -766,8 +766,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '3.0.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -1313,6 +1313,15 @@
             'reference' => '11cb2199493b2f8a3b53e7f19068fc6aac760991',
             'type' => 'library',
             'install_path' => __DIR__ . '/../webmozart/assert',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'xentixar/esewa-sdk' => array(
+            'pretty_version' => 'v1.0.03',
+            'version' => '1.0.03.0',
+            'reference' => '26e80bc100a827280b86e5c619ea47ffb5b56a3b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../xentixar/esewa-sdk',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

@@ -30,6 +30,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectCounterController;
+use App\Http\Controllers\EsewaPaymentController;
 
 // CACHE CLEAR ROUTE
 Route::get('cache-clear', function () {
@@ -42,7 +43,8 @@ Route::get('cache-clear', function () {
 Route::get('storage-link', [AdminController::class, 'storageLink'])->name('storage.link');
 
 Auth::routes(['register' => false]);
-
+Route::post('esewa/pay', [EsewaPaymentController::class, 'pay'])->name('esewa.pay');
+Route::get('esewa/check', [EsewaPaymentController::class, 'check'])->name('esewa.check');
 // Authentication Routes
 Route::controller(FrontendController::class)->group(function () {
     Route::get('user/login', 'login')->name('login.form');

@@ -235,7 +235,7 @@
 
   </li>
 
-  @can('manage-roles')
+  <!-- @can('manage-roles')
   <li class="nav-item">
     <a class="nav-link " href="{{ route('roles.index') }}">
 
@@ -243,7 +243,7 @@
     </a>
 
   </li>
-  @endcan
+  @endcan -->
   @can('manage-roles')
   <li class="nav-item">
     <a class="nav-link " href="{{ route('roles.index') }}">
